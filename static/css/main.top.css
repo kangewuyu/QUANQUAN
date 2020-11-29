@@ -325,7 +325,7 @@ body{
 }
 
 /* 登录注册弹窗 */
-.popup{
+.popup,.dynamic{
 	width: 100%;
 	height: 100%;
 	position: fixed;
@@ -344,17 +344,19 @@ body{
 	-ms-transition: -ms-all .3s ease-in-out;
 	transition: all .3s ease-in-out;
 }
-.popup .box{
+.box{
 	position: relative;
 	z-index: 1;
 	display: flex;
-	width: 400px;
-	height: 380px;
 	margin: 0 auto;
 	border-radius: 5px;
 	background-color: #FFFFFF;
 	-webkit-box-shadow: 0 4px 18px rgba(18,18,18,.1);
 	box-shadow: 0 4px 18px rgba(18,18,18,.1);
+}
+.popup .login-box{
+	width: 400px;
+	height: 380px;
 }
 .box>em{
 	position: absolute;
@@ -445,3 +447,7 @@ body{
 	border-color:transparent;
 }
 /* 动态发布窗口 */
+.dynamic .box-dynamic{
+	width: 500px;
+	height: 300px;
+}

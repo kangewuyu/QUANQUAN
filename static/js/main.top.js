@@ -127,7 +127,7 @@ $.fn.serializeJson =  function(filter){
 $.loginDIV = function(){
 	let div = $("<div>");
 	let div_div = $("<div class='popup'>");
-	let pop_div = $("<div class='box'>");
+	let pop_div = $("<div class='box login-box'>");
 	let from_div = $("<form class='login-from' id='login' autocomplete='off'>");
 	let form_tile = $("<div class='login-tab'>");
 	let span = $("<span>").text("教务系统登录");
@@ -135,7 +135,9 @@ $.loginDIV = function(){
 	let Button = $("<button class='Button button--pink button-login' type='submit'>").text("登录");
 	let em_close = $("<em class='iconfont icon-close'>");
 	form_tile.append(span)
-	from_div.append(form_tile,strong,$.input("xh","text","学号"),$.input("passwd","password","密码"),Button);
+	from_div.append(form_tile,strong,
+	$.input("xh","text","学号"),
+	$.input("passwd","password","密码"),$("<keygen name=''>"),Button);
 	pop_div.append(from_div,em_close);
 	div_div.append(pop_div);
 	div.append(div_div);
