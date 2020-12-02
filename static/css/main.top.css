@@ -517,9 +517,11 @@ body{
 	position: absolute;
 	bottom: 0;
 	color: #C0C0C0;
-	font-size: 12px;
+	font-size: 14px;
 }
-
+.word-number>span{
+	color: red;
+}
 .content-img{
 	margin: 6px 0;
 	display: flex;

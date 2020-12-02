@@ -10,13 +10,16 @@
 	if(location.search.length===0){
 		sessionStorage.removeItem("search");
 	}
+	
 	/* 判断是否登录 */
 	$.if_login = function(){
+		let e;
 		$.ajax({
 			url:"http://8.129.177.19:8085/user/selfuser",
 			dataType:'json',//服务器返回json格式数据
 			type:'get',//HTTP请求类型
 			timeout:10000,//超时时间设置为10秒；
+			async:false,
 			success:function(data){
 				if(data.code=="200"){
 					sessionStorage.setItem("userId",data.data.userId);
@@ -26,21 +29,21 @@
 					let pic_href = JSON.parse(data.data.avatarPicture)[0];
 					sessionStorage.setItem("pic","http://123.56.160.202/hutquan/headPhoto/"+pic_href);
 					//hearder_info(true);
-					return true;
+					e=true;
 				}else{
-					//hearder_info(false);
-					//div_login();
-					return false;
+					e=false
 				}
 			},
-			error:function(){
+			/* error:function(){
 				//hearder_info(false);
 				return false;
-			}
+			} */
 		});
+		return e;
 	}
 	
 	/* 判断是否登录 */
+	//console.log($.if_login())
 	if ($.if_login()) {
 		hearder_info(true)
 	} else{
@@ -152,8 +155,8 @@ $.loginDIV = function(){
 	let em_close = $("<em class='iconfont icon-close'>");
 	form_tile.append(span)
 	from_div.append(form_tile,strong,
-	$.input("xh","text","学号"),
-	$.input("passwd","password","密码"),$("<keygen name=''>"),Button);
+		$.input("xh","text","学号"),
+		$.input("passwd","password","密码"),$("<keygen name=''>"),Button);
 	pop_div.append(from_div,em_close);
 	div_div.append(pop_div);
 	div.append(div_div);
@@ -329,9 +332,9 @@ $.dynamicDIV = function () {
 					+'<div class="dynamicm-conten">'
 						+'<form class="dynamic-form" id="dynamic">'
 							+'<div class="dynamic-item">'
-								+'<img class="item-img" src="static/img/background.jpg" width="50" height="50"/>'
+								+'<img class="item-img" src="'+sessionStorage.pic+'" width="50" height="50"/>'
 								+'<div class="dynamic-text">'
-									+'<textarea class="dynamic-textarea" name="message"  placeholder="分享你的学习和或生活动态"></textarea>'
+									+'<textarea class="dynamic-textarea" name="message"  placeholder="分享你的学习和或生活动态(10-200字)" maxlength="200"></textarea>'
 									+'<p class="word-number">字数：<span></span></p>'
 									+'<div class="dynamic-tips">'
 										+'<span class="tips">至少10个字</span>'
@@ -342,7 +345,7 @@ $.dynamicDIV = function () {
 										
 									+'</ul>'
 									+'<div class="file">'
-										+'<span class="img-span"><i class="iconfont icon-upload"></i><br />上传图片</span><input type="file" name="file" accept="image/jpeg,image/x-png,image/gif" id="upload" multiple="multiple">'
+										+'<span class="img-span"><i class="iconfont icon-upload"></i><br />上传图片(最多8张)</span><input type="file" name="file" accept="image/jpeg,image/x-png,image/gif" id="upload" multiple="multiple">'
 									+'</div>'
 								+'</div>'
 							+'</div>'
@@ -484,7 +487,6 @@ $("button.SearchBar-button").click(function(){
 	if ($.if_login()) {
 		body.append($.dynamicDIV());
 	} else{
-		
 		body.append($.loginDIV());
 	}
 	
