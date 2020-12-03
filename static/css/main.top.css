@@ -37,6 +37,9 @@ a {
 textarea{
 	resize: none;
 }
+html{
+	background-color: #f6f6f6;
+}
 body{
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	font-size: 16px;
@@ -98,6 +101,7 @@ body{
 }
 .baseHeader-nav{
 	position: relative;
+	display: -webkit-box;
 	display: flex;
 	width: 1000px;
 	height: 60px;
@@ -107,13 +111,14 @@ body{
 	transition: transform .3s ease-in-out;
 }
 .hearder-top{
+	display: -webkit-box;
 	display: flex;
 	margin: 0 30px;
 	align-items: center;
 	flex-shrink: 0;
 }
 .hearder-top .tap-items{
-	padding: 0 30px;
+	padding: 0 20px;
 }
 .tap-items .links-a{
 	position: relative;
@@ -159,8 +164,8 @@ body{
 	opacity: 1;
 	transform:scale(1,1); 
 }
-
 .SearchBar{
+	display: -webkit-box;
 	display: flex;
 }
 .header-SearchBar{
@@ -188,6 +193,7 @@ body{
 }
 .SearchBar .SearchBar-input{
 	position: relative;
+	display: -webkit-box;
 	display: flex;
 	height: 32px;
 	align-items: center;
@@ -222,6 +228,7 @@ body{
 .hearder-info{
 	width: 240px;
 	flex-shrink: 0;
+	display: -webkit-box;
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
@@ -240,14 +247,6 @@ body{
 	border-color:#FFF5FB;
 	background-color:#fff5fb ;
 }
-.base-main{
-	width: 100%;
-	height: 2000px;
-	background:url(../img/background.jpg) bottom center no-repeat;
-	background-size: 100% 100%;
-	transition: all .3s ease-in-out;
-}
-
 /* 导航 */
 .backtop{
 	position: fixed;
@@ -265,6 +264,7 @@ body{
 }
 /* 登录后的头部样式 */
 .user-private-letter{
+	display: -webkit-box;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -275,6 +275,7 @@ body{
 	height: 34px;
 }
 .user-img{
+	display: -webkit-box;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -312,13 +313,14 @@ body{
 	color: #FFFFFF;
 	border-radius: 3px;
 }
-.menu-detailes>a{
+.menu-detailes .user{
+	display: -webkit-box;
 	display: flex;
 	padding: 0 10px;
 	height: 40px;
 	align-items: center;
 }
-.menu-detailes>a:hover{
+.menu-detailes .user:hover{
 	border-color: lightpink;
 	background-color: lightpink;
 }
@@ -340,6 +342,7 @@ body{
 	top: 0;
 	bottom: 0;
 	animation: pop .5s forwards;
+	display: -webkit-box;
 	display: flex;
 	-webkit-flex-direction: column;
 	-ms-flex-direction: column;
@@ -356,6 +359,7 @@ body{
 .box{
 	position: relative;
 	z-index: 1;
+	display: -webkit-box;
 	display: flex;
 	margin: 0 auto;
 	-webkit-animation: box-ani .5s forwards;
@@ -391,6 +395,7 @@ body{
 	width: 100%;
 	height: 60px;
 	text-align: center;
+	display: -webkit-box;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -473,6 +478,7 @@ body{
 	width: 100%;
 }
 .dynamic-form{
+	display: -webkit-box;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -490,6 +496,7 @@ body{
 .dynamic-text{
 	position: relative;
 	overflow: hidden;
+	display: -webkit-box;
 	display: flex;
 	flex-direction: column;
 	font-size: 18px;
@@ -506,6 +513,7 @@ body{
 }
 .dynamic-tips{
 	height: 24px;
+	display: -webkit-box;
 	display: flex;
 	justify-content: end;
 }
@@ -524,6 +532,7 @@ body{
 }
 .content-img{
 	margin: 6px 0;
+	display: -webkit-box;
 	display: flex;
 	align-items: flex-start;
 	flex-wrap: wrap;
@@ -599,6 +608,7 @@ body{
 	cursor: pointer;
 }
 .dynamic-footer{
+	display: -webkit-box;
 	display: flex;
 	justify-content: end;
 }

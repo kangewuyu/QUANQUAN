@@ -34,10 +34,10 @@
 					e=false
 				}
 			},
-			/* error:function(){
+			error:function(){
 				//hearder_info(false);
-				return false;
-			} */
+				e= false;
+			}
 		});
 		return e;
 	}
@@ -255,13 +255,8 @@ function hearder_info(e){
 	hearder_info.empty();
 	/* 已经登录后的头部修改 */
 	if(e){
-		let div = $("<div class='user-private-letter'><button id='private-letter' class='Button button--pink button-letter'><span class='iconfont icon-email'></button></div>");
 		let div_user = $(`<div class='user-img'><button id='Image' class='Button button-pics'><img class='user-pic' srcset='`+sessionStorage.pic+`'/></button></div>`);
-		hearder_info.append(div,div_user);
-		/* 私聊消息 */
-		div.ready(function(){
-			
-		})
+		hearder_info.append(div_user);
 		/* 个人信息 */
 		div_user.ready(function(){
 			var detailes = $("#detailes");
@@ -280,8 +275,8 @@ function hearder_info(e){
 				if (detailes.children().length===0) {
 					let span = $('<span class="triangle">');
 					let div = $('<div class="menu-detailes">');
-					let a_1 = $('<a href="/QUANQUAN/view/people/user.homepage.html" class="iconfont icon-account-fill">个人中心</a>');
-					let a_2 = $('<a href="javascript:void(0);" class="iconfont icon-switch">退出登录</a>');
+					let a_1 = $('<strong class="user">'+sessionStorage.username+'</strong>');
+					let a_2 = $('<a href="javascript:void(0);" class="user iconfont icon-switch">退出登录</a>');
 					div.append(a_1,a_2);
 					detailes.append(span,div);
 					a_2.click(function(e){
@@ -422,7 +417,7 @@ $.dynamicDIV = function () {
 		$(".dynamic-footer .Button").click(function(){
 			
 			let message = $("#dynamic").serializeJson().message;
-			console.log(message.length<10);
+			//console.log(message.length<10);
 			if (message.length<10) {
 				$(".dynamic-tips .tips").show();
 				return false;
@@ -437,7 +432,7 @@ $.dynamicDIV = function () {
 			  let name = hasFiles.file.name
 			  let type = hasFiles.file.type */
 			//base64图片数据
-			console.log(e);
+			//console.log(e);
 			var fd = new FormData();
 			
 			//e.forEach()
@@ -458,7 +453,7 @@ $.dynamicDIV = function () {
 				fd.append("file",obj,"image."+suffix)
 			}
 			fd.append("message",$("#dynamic").serializeJson().message);
-			console.log(fd.getAll("message"));
+			//console.log(fd.getAll("message"));
 			
 			
 			//上传到服务器
@@ -475,6 +470,7 @@ $.dynamicDIV = function () {
 					location = window.location;
 				}
 			});
+			
 		})
 	})
 	
@@ -501,99 +497,3 @@ $("input").each(
 				}
 			});
 });
-/* 删除并预览图片 */
-$("#upload").change(function(){
-	let imgLength = $(".content-img-list").children().length;
-			
-	if((this.files.length+imgLength)>8){
-		return alert("最多只能上传8张图片");
-	}
-	for (var i = 0; i < this.files.length; i++) {
-		var imgSize = this.files[i].size;  //b
-		if(imgSize>1024*1024*5){//1M
-			return alert("上传图片不能超过5M");
-		}
-		if(this.files[i].type != 'image/png'&&
-		this.files[i].type != 'image/gif'&&
-		this.files[i].type!='image/jpg'&&
-		this.files[i].type!='image/jpeg'&&
-		this.files[i].type!='image/jfif'&&
-		this.files[i].type!='image/pjpeg'&&
-		this.files[i].type!='image/pjp'){
-			return alert("图片上传格式不正确");
-		}
-		var file = this.files[i];
-		r = new FileReader();  //本地预览
-		r.onload = function(e){
-			//console.log(e.target.result);
-			addNewContent($(".content-img-list"),e.target.result)
-		}
-		r.readAsDataURL(file);    //Base64
-	}
-	/* 隐藏上传按钮 */
-	if((imgLength+this.files.length)===8){
-		$('.content-img .file').hide();
-	}
-	/* 预览图片 */
-	function addNewContent(obj,src) {
-		$(obj).append('<li class="content-img-list-item"><img src="'+src+'" alt=""><a class="delete-btn"><i class="iconfont icon-delete"></i></a></li>');
-	}
-})
-/* 删除图片 */	
-$(".content-img-list").on("click",".content-img-list-item a.delete-btn",function () {
-	//console.log($(".content-img-list-item").length)
-	let item = $(".content-img-list-item");
-	$(this).parent().remove(300);
-	if(item.length<8){//显示上传按钮
-		$('.content-img .file').show();
-	}
-})
-$(".dynamic-footer .Button").click(function(){
-	//console.log($("#dynamic").serializeJson().message)
-	let e = $(".content-img-list").find("img");
-	//获取数组最后一个元素
-	/* let files = {url:e,orientation:1,file:File(818905)}
-	  let hasFiles = files[Object.keys(files).pop()] // 参考上面的图片
-	  console.log(hasFiles);
-	  let file = hasFiles.url
-	  let name = hasFiles.file.name
-	  let type = hasFiles.file.type */
-	//base64图片数据
-	console.log(e);
-	var fd = new FormData();
-	
-	//e.forEach()
-	for (let i = 0; i < e.length; i++) {
-		//console.log(e.eq(i));
-		var dataurl=e.eq(i).attr("src");
-		/* base64格式转换为上传导服务器的形式 */
-		var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-		bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-		while(n--){
-			u8arr[n] = bstr.charCodeAt(n);
-		}
-		let obj = new Blob([u8arr], {type:mime});
-		
-		var suffix = mime.split("/")[1];
-		//console.log(suffix);
-		//getImgFiles();
-		fd.append("file",obj,"image."+suffix)
-	}
-	fd.append("message",$("#dynamic").serializeJson().message);
-	console.log(fd.getAll("message"));
-	
-	
-	//上传到服务器
-	$.ajax({
-	    url: "http://8.129.177.19:8085/withfriend/releasedc",
-	    type: "POST",
-	    dataType:'json',//服务器返回json格式数据
-	    cache: false,  
-	    processData: false,  
-	    contentType: false,
-	    data: fd,
-	    success: function (data) {
-	    	console.log(data);
-	    }
-	});
-})

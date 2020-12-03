@@ -1,0 +1,41 @@
+.base-main{
+	width: 100%;
+	transition: all .3s ease-in-out;
+}
+.main-content{
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-align:start;
+	align-items: flex-start;
+	padding: 0 16px;
+	width: 1000px;
+	margin: 10px auto;
+}
+.quanquan-dynamic{
+	width: 100%;
+	background-color: #FFFFFF;
+	box-shadow: 0 1px 3px rgba(18,18,18,.1);
+}
+.dynamic-top{
+	border-bottom: 1px solid pink;
+}
+.dynamic-taps{
+	padding: 0 30px;
+	height: 60px;
+	display: flex;
+	justify-content: center;
+}
+.dynamic-taps .dynamic-links-a{
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	font-size: 16px;
+	margin: 0 22px;
+}
+.dynamic-taps .dynamic-links-a:hover,.dynamic-links-a.is-active{  
+	opacity: 1;
+	color: palevioletred;
+}	
