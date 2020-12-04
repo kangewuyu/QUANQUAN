@@ -92,6 +92,9 @@
 	font-size:12px;
 	margin-left: 2px;
 }
+.time{
+	color: mistyrose;
+}
 .message-image{
 	margin: 6px 0;
 	display: -webkit-box;

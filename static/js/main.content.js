@@ -1,4 +1,52 @@
 (function () {
+	
+	/*日期格式化 */
+	Date.prototype.format = function (format) {
+		var o = {
+			"Y+": this.getFullYear().toString(),        // 年
+			"y+": this.getFullYear().toString(),        // 年
+			"m+": (this.getMonth() + 1).toString(),     // 月
+			"d+": this.getDate().toString(),            // 日
+			"H+": this.getHours().toString(),           // 时
+			"M+": this.getMinutes().toString(),         // 分
+			"S+": this.getSeconds().toString()          // 秒
+				// 有其他格式化字符需求可以继续添加，必须转化成字符串
+	        }
+		if (/(y+)/.test(format)) format = format.replace(RegExp.$1,(this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		for (var k in o) if (new RegExp("(" + k + ")").test(format))format = format.replace(RegExp.$1,RegExp.$1.length == 1 ? o[k] :("00" + o[k]).substr(("" + o[k]).length));
+		return format;
+	}
+	/* 日期显示设置 */
+	$.date_display = function(date){
+		let dynamic_date= (date).format("yyyy-mm-dd");
+		//console.log(dynamic_date);
+		let nowdate = new Date().format("yyyy-mm-dd");
+		
+		//console.log(nowdate);
+		if (dynamic_date===nowdate) {
+			return date.format("HH:MM");
+		} else{
+			//console.log(date.getTime())
+			let time = date.getTime()+24*60*60*1000;
+			//console.log(time);
+			dynamic_date = new Date(time).format('yyyy-mm-dd');
+			//console.log(dynamic_date);
+			if (dynamic_date===nowdate) {
+				return "昨天 "+date.format("HH:MM");
+			} else{
+				//console.log(date.getTime())
+				let time = date.getTime()+24*60*60*1000*2;
+				//console.log(time);
+				dynamic_date = new Date(time).format('yyyy-mm-dd');
+				if (dynamic_date===nowdate) {
+					return "前天 "+date.format("HH:MM");
+				} else{
+					return date.format("yyyy-mm-dd HH:MM");
+				}
+			}
+			console.log(2);
+		}
+	}
 	let dynamic_load = false;
 	let content = $("div.dynamic-list div.content");
 	/* 显示动态 */
@@ -24,7 +72,11 @@
 			username_div.append(username);
 			/* 发布时间 */
 			let dynamic_time=$("<div class='dynamic-time'>");
-			let time=$("<span class='time'>").text(dynamic.time);
+			let date1 = new Date(dynamic.time*1000);
+			
+			
+			//console.log(date);
+			let time=$("<span class='time'>").text($.date_display(date1));
 			dynamic_time.append(time);
 			user_div.append(username_div,dynamic_time)
 			cord_author.append(span,user_div);
@@ -88,6 +140,7 @@
 		})
 	}
 	$.load(1);
+	$.load(2);
 	$.ajax({
 		url:"http://8.129.177.19:8085/user/follower",
 		dataType:'json',//服务器返回json格式数据
