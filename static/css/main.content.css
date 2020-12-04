@@ -13,7 +13,7 @@
 }
 .quanquan-dynamic{
 	width: 100%;
-	background-color: #FFFFFF;
+	background-color: rgba(120,120,126,.5);
 	box-shadow: 0 1px 3px rgba(18,18,18,.1);
 }
 .dynamic-top{
@@ -38,4 +38,79 @@
 .dynamic-taps .dynamic-links-a:hover,.dynamic-links-a.is-active{  
 	opacity: 1;
 	color: palevioletred;
-}	
+}
+.card{
+	padding: 20px;
+	border-bottom: 1px solid pink;
+}
+.item-dynamic{
+	position: relative;
+	overflow: initial;
+	display: flex;
+	align-items: flex-start;
+}
+.dynamic-user{
+	margin-bottom: 10px;
+	position: relative;
+	display: flex;
+	justify-content: flex-start;
+}
+.author-pic{
+	width: 46px;
+	height: 46px;
+	margin-right: 10px;
+	border-radius: 50%;
+}
+.author-img{
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+.username{
+	font-size: 20px;
+}
+.username .author-name{
+	position: relative;
+	color: pink;
+}
+.username .author-name:hover::before{
+	position: absolute;
+	display: block;
+	content: "";
+	height: 1px;
+	width: 96%;
+	background-color: pink;
+	left: 2%;
+	margin: 0 auto;
+	bottom: 0;
+}
+.dynamic-message{
+	margin-left: 20px;
+	padding-top: 2px;
+}
+.dynamic-time{
+	font-size:12px;
+	margin-left: 2px;
+}
+.message-image{
+	margin: 6px 0;
+	display: -webkit-box;
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+.dynamic-content-img{
+	display: inline;
+	margin-top: 5px;
+}
+.img-list-item{
+	position: relative;
+	display: inline-block;
+	margin: 0 1px;
+	margin-bottom: 3px;
+	cursor: pointer;
+}
+.dynamic-image{
+	width: 230px;
+	height: 230px;
+}

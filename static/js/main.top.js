@@ -329,7 +329,7 @@ $.dynamicDIV = function () {
 							+'<div class="dynamic-item">'
 								+'<img class="item-img" src="'+sessionStorage.pic+'" width="50" height="50"/>'
 								+'<div class="dynamic-text">'
-									+'<textarea class="dynamic-textarea" name="message"  placeholder="分享你的学习和或生活动态(10-200字)" maxlength="200"></textarea>'
+									+'<textarea class="dynamic-textarea" name="message"  placeholder="分享你的学习和或生活动态(10-100字)" maxlength="100"></textarea>'
 									+'<p class="word-number">字数：<span></span></p>'
 									+'<div class="dynamic-tips">'
 										+'<span class="tips">至少10个字</span>'
@@ -423,7 +423,7 @@ $.dynamicDIV = function () {
 				return false;
 			}
 			//console.log($("#dynamic").serializeJson().message)
-			let e = $(".content-img-list").find("img");
+			let e = $(".content-img .content-img-list").find("img");
 			//获取数组最后一个元素
 			/* let files = {url:e,orientation:1,file:File(818905)}
 			  let hasFiles = files[Object.keys(files).pop()] // 参考上面的图片
@@ -436,6 +436,7 @@ $.dynamicDIV = function () {
 			var fd = new FormData();
 			
 			//e.forEach()
+			console.log(e.length);
 			for (let i = 0; i < e.length; i++) {
 				//console.log(e.eq(i));
 				var dataurl=e.eq(i).attr("src");
