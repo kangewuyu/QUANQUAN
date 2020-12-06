@@ -176,7 +176,8 @@
 				focusInputLoginBox($(this));
 			})
 			$(".icon-close").click(function(){
-				$(".popup").parent().remove();
+				$(".box.login-box").addClass("box-delete");
+				setTimeout(function(){div.remove();},600);
 			})
 			$(".button-login").click(function(){
 				if($("input[name='xh']").val()===null||$.trim($("input[name='xh']").val()).length===0){
@@ -327,10 +328,10 @@
 								+'<div class="dynamic-item">'
 									+'<img class="item-img" src="'+sessionStorage.pic+'" width="50" height="50"/>'
 									+'<div class="dynamic-text">'
-										+'<textarea class="dynamic-textarea" name="message"  placeholder="分享你的学习和或生活动态(10-100字)" maxlength="100"></textarea>'
+										+'<textarea class="dynamic-textarea" name="message"  placeholder="分享你的学习和或生活动态(6-100字)" maxlength="100"></textarea>'
 										+'<p class="word-number">字数：<span></span></p>'
 										+'<div class="dynamic-tips">'
-											+'<span class="tips">至少10个字</span>'
+											+'<span class="tips">至少6个字</span>'
 										+'</div>'
 									+'</div>'
 									+'<div class="content-img">'
@@ -338,7 +339,7 @@
 											
 										+'</ul>'
 										+'<div class="file">'
-											+'<span class="img-span"><i class="iconfont icon-upload"></i><br />上传图片(最多8张)</span><input type="file" name="file" accept="image/jpeg,image/x-png,image/gif" id="upload" multiple="multiple">'
+											+'<span class="img-span"><i class="iconfont icon-upload"></i><br />上传图片(最多9张)</span><input type="file" name="file" accept="image/jpeg,image/x-png,image/gif" id="upload" multiple="multiple">'
 										+'</div>'
 									+'</div>'
 								+'</div>'
@@ -363,14 +364,15 @@
 			}
 			$(".dynamic-tips .tips").hide();
 			$(".icon-close").click(function(){
-				$(".dynamic").parent().remove();
+				$(".box.box-dynamic").addClass("box-delete");
+				setTimeout(function(){div.remove()},600);
 			})
 			/* 添加并预览图片 */
 			$("#upload").change(function(){
 				let imgLength = $(".content-img-list").children().length;
 						
-				if((this.files.length+imgLength)>8){
-					return alert("最多只能上传8张图片");
+				if((this.files.length+imgLength)>9){
+					return alert("最多只能上传9张图片");
 				}
 				for (var i = 0; i < this.files.length; i++) {
 					var imgSize = this.files[i].size;  //b
@@ -416,7 +418,7 @@
 				
 				let message = $("#dynamic").serializeJson().message;
 				//console.log(message.length<10);
-				if (message.length<10) {
+				if (message.length<6) {
 					$(".dynamic-tips .tips").show();
 					return false;
 				}
@@ -466,7 +468,9 @@
 					data: fd,
 					success: function (data) {
 						console.log(data);
-						location = window.location;
+						$(".box.box-dynamic").addClass("box-delete");
+						setTimeout(function(){div.remove()},600);
+						//location = window.location;
 					}
 				});
 				

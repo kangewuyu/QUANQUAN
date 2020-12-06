@@ -51,6 +51,7 @@ body{
 /* 图标 */
 .iconfont{
 	font-size: 24px;
+	text-align: center;
 }
 /* logo */
 .compar{
@@ -341,7 +342,7 @@ body{
 	right: 0;
 	top: 0;
 	bottom: 0;
-	animation: pop .5s forwards;
+	animation: pop .1s forwards;
 	display: -webkit-box;
 	display: flex;
 	-webkit-flex-direction: column;
@@ -353,8 +354,8 @@ body{
 	transition: all .5s ease-in-out;
 }
 @keyframes pop{
-	from{background: rgba(0,0,0,0);}
-	to{background: rgba(0,0,0,0.5);}
+	from{opacity: 0;}
+	to{background-color: rgba(0,0,0,0.5);}
 }
 .box{
 	position: relative;
@@ -362,17 +363,26 @@ body{
 	display: -webkit-box;
 	display: flex;
 	margin: 0 auto;
-	-webkit-animation: box-ani .5s forwards;
-	-ms-animation: box-ani .5s forwards;
-	animation: box-ani .5s forwards;
+	-webkit-animation: box-ani 1s ease-in-out forwards;
+	-ms-animation: box-ani 1s ease-in-out forwards;
+	animation: box-ani 1s ease-in-out forwards;
 	border-radius: 5px;
 	background-color: #FFFFFF;
 	-webkit-box-shadow: 0 4px 18px rgba(18,18,18,.1);
 	box-shadow: 0 4px 18px rgba(18,18,18,.1);
 }
+.box-delete{
+	-webkit-animation: box-d .5s ease-in-out forwards;
+	-ms-animation: box-d .5s ease-in-out forwards;
+	animation: box-d .5s ease-in-out forwards;
+}
 @keyframes box-ani{
-	from{opacity: 0;}
-	to{opacity: 1;}
+	from{opacity: 0;bottom: -5%;}
+	to{opacity: 1;bottom: 0;}
+}
+@keyframes box-d{
+	from{opacity: 1;bottom: 0%;}
+	to{opacity: 0;bottom: -5%;}
 }
 .popup .login-box{
 	width: 400px;
@@ -577,8 +587,8 @@ body{
 	to{opacity: 0;}
 }
 @keyframes mydelete{
-	from{opacity: 0;}
-	to{opacity: 1;}
+	from{opacity: 1;}
+	to{opacity: 0;}
 	
 }
 .content-img-list-item>img{

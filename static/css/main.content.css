@@ -13,7 +13,7 @@
 }
 .quanquan-dynamic{
 	width: 100%;
-	background-color: rgba(120,120,126,.5);
+	background-color: rgba(189,169,164,1);
 	box-shadow: 0 1px 3px rgba(18,18,18,.1);
 }
 .dynamic-top{
@@ -42,6 +42,18 @@
 .card{
 	padding: 20px;
 	border-bottom: 1px solid pink;
+	animation: card-up 2s ease-in-out forwards;
+}
+@keyframes card-up{
+	from{opacity: 0;display: none;}
+	to{opacity: 1;display: block;}
+}
+.card-delete{
+	animation: card-delete 1s ease-in-out forwards;
+}
+@keyframes card-delete{
+	from{opacity: 1;}
+	to{opacity: 0;}
 }
 .item-dynamic{
 	position: relative;
@@ -85,8 +97,10 @@
 	bottom: 0;
 }
 .dynamic-message{
+	width: 100%;
 	margin-left: 20px;
 	padding-top: 2px;
+	padding-right: 40px;
 }
 .dynamic-time{
 	font-size:12px;
@@ -96,6 +110,7 @@
 	color: mistyrose;
 }
 .message-image{
+	
 	margin: 6px 0;
 	display: -webkit-box;
 	display: flex;
@@ -116,4 +131,76 @@
 .dynamic-image{
 	width: 230px;
 	height: 230px;
+}
+.contentItem{
+	position: relative;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: flex-start;
+}
+.contentItem .button-star{
+	padding: 0 10px;
+	position: relative;
+	text-align: center;
+	border: none;
+}
+.contentItem .button-like{
+	animation: like-ani .5s ease-in-out forwards;
+}
+.contentItem .button--star{
+	animation: star-ani .5s ease-in-out forwards;
+}
+@keyframes star-ani{
+	from{color: white;background: #DB7093;}
+	to{color:#8590a6;}
+}
+@keyframes like-ani{
+	from{color:#8590a6;}
+	to{color: white;background: #DB7093;}
+}
+.content-comment{
+	margin-left: 20px;
+	position: relative;
+	text-align: center;
+	cursor: pointer;
+}
+.contentItem .iconfont{
+	font-size: 16px;
+	padding-right: 6px;
+}
+/* 动态删除按钮 */
+.delete-dynamic{
+	position: absolute;
+	top: 0;
+	right: 20px;
+	color: #E5E5E5;
+	cursor: pointer;
+}
+.delete{
+	z-index: 2;
+	width: 100px;
+	right: 0;
+	position: absolute;
+	background-color: #F6F6F6;
+	border-radius: 3px;
+}
+.delete .triangle{
+	top: -8px;
+	left: 80%;
+	border-bottom: 8px solid #F6F6F6;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent
+}
+.delete div{
+	display: flex;
+	justify-content: center;
+}
+.delete-a-dynamic{
+	height: 32px;
+	line-height: 32px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	color: #121212;
 }

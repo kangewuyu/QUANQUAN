@@ -44,14 +44,14 @@
 					return date.format("yyyy-mm-dd HH:MM");
 				}
 			}
-			console.log(2);
 		}
 	}
+	
 	let dynamic_load = false;
 	let content = $("div.dynamic-list div.content");
 	/* 显示动态 */
 	$.dynamic_list=function(data){
-		console.log(data);
+		//console.log(data);
 		for (let dynamic of data) {
 			let cord = $("<div class='card item-dynamic recommend'>");
 			cord.attr("data-content",
@@ -104,15 +104,166 @@
 				}
 				message_pic.append(ul);
 			}
-			/* 评论 */
+			/* 动态信息 */
 			let message_actions=$("<div class='contentItem'></div>");
-			let cancellike;
+			let starCount=$("<button class='Button'></button>");
+			let star=$("<span class='iconfont icon-favorites-fill'></span>") 
+			let count = dynamic.starCount;
+			let text;
+			starCount.addClass("button-star");
+			if (dynamic.like) {
+				starCount.addClass("button-like");
+				text = "已赞同 ";
+			} else{
+				text = '赞同 ';
+			}
+			starCount.append(star,text,count);
+			let commentCount=$("<div class='content-comment'><span class='iconfont icon-icon-test'></span>"+dynamic.commentCount+"条评论</div>");
+			message_actions.append(starCount,commentCount);
+			
 			cord_content.append(message,message_pic,message_actions);
+			/* 判断是否是自己的动态 */
+			if (dynamic.self) {
+				/* 添加删除按钮 */
+				let delete_dynamic = $("<div class='delete-dynamic'><span class='iconfont icon-arrow-down'></span></div>");
+				cord.append(delete_dynamic);
+			}
+			/* 动态框添加 */
 			cord.append(cord_author,cord_content);
 			content.children().eq(content.children().length-1).before(cord);
-			dynamic_load = false;
+			
 		}
+		/* 动态加载完毕 */
+		dynamic_load = false;
+		/* 添加DOM事件 */
+		$("div.card").ready(function(e){
+			console.log(1);
+			/* 赞同动态 */
+			$(".contentItem button").click(function (e) {
+				e.stopPropagation();
+				let eq = $(this).children().eq(0);
+				let dynamic= eval('(' + $(this)
+				.parent()
+				.parent()
+				.parent()
+				.data("content") + ')');
+				let t=$(this);
+				if($(this).hasClass("button-like")){
+					
+					$.ajax({
+						url:"http://8.129.177.19:8085/withfriend/cancellike/"+dynamic.dynamicId,
+						dataType:'json',//服务器返回json格式数据
+						type:'get',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+							//console.log(data);
+							if (data.code=="200") {
+								t.removeClass("button-like");
+								t.addClass("button--star");
+								t.empty();
+								t.append(eq,"赞同 ",data.data);
+							}
+							if (data.code == '403') {
+								let body=$("body");
+								body.children("div").eq(body.children("div").length).remove();
+								body.append($.loginDIV());
+							} 
+							
+						},
+						error:function(data){
+							//hearder_info(false);
+							console.log(data);
+						}
+					})
+				}else{
+					$.ajax({
+						url:"http://8.129.177.19:8085/withfriend/like/"+dynamic.dynamicId,
+						dataType:'json',//服务器返回json格式数据
+						type:'get',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+							//console.log(data);
+							if (data.code=="200") {
+								t.removeClass("button--star");
+								t.addClass("button-like");
+								t.empty();
+								t.append(eq,"已赞同 ",data.data);
+							}
+							if (data.code == '403') {
+								let body=$("body");
+								body.children("div").eq(body.children("div").length).remove();
+								body.append($.loginDIV());
+							} 
+						},
+						error:function(data){
+							//hearder_info(false);
+							console.log(data);
+						}
+					})
+					
+				}
+			})
+			/* 显示部分评论 */
+			
+			/* 显示删除按钮 */
+			$("div.delete-dynamic").mouseenter(function (event) {
+				event.stopPropagation();
+				let delete_dynamic = $(this);
+				delete_dynamic.children().eq(1).remove()
+				let delete_div=$("<div class='delete'>")
+				let triangle=$("<span class='triangle'></span>")				
+				let div =$("<div><a class='delete-a-dynamic' href='JavaScript:void(0);'>"+
+							"<span class='iconfont icon-delete'></span>删除</a></div>");
+				delete_div.append(triangle,div);
+				delete_dynamic.append(delete_div);
+				/* 调用后台删除接口 */
+				$("a.delete-a-dynamic").click(function (e) {
+					e.stopPropagation();
+					//$(this).remove();
+					let dynamic= eval('(' + delete_dynamic.parent().data("content") + ')');
+					$.ajax({
+						url:"http://8.129.177.19:8085/withfriend/delDynamic/"+dynamic.dynamicId,
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+							//console.log(data);
+							if(data.code=="200"){
+								console.log(data);
+								delete_dynamic.parent().addClass('card-delete');
+								
+								setTimeout (function(){delete_dynamic.parent().remove()},1500); 
+								
+								//hearder_info(true);
+							}else{
+								console.log(data);
+							}
+						},
+						error:function(data){
+							//hearder_info(false);
+							console.log(data);
+						}
+					})
+				})
+				/* 移除删除按钮 */
+				$("div.delete").mouseleave(function () {
+					event.stopPropagation();
+					//console.log(1)
+					$(this).parent().children().eq(1).remove()
+				})
+			})
+			/* 移除删除按钮 */
+			$("div.delete-dynamic").mouseleave(function () {
+				event.stopPropagation();
+				$(this).children().eq(1).remove()
+			})
+			
+			
+		})
 	}
+	
+	
+	/* 从后台查询推荐动态 */
 	$.load = function(page){
 		$.ajax({
 			url:"http://8.129.177.19:8085/withfriend/dynamicbytime/"+page,
@@ -121,7 +272,7 @@
 			timeout:10000,//超时时间设置为10秒；
 			async:false,
 			success:function(data){
-				//console.log(data);
+				console.log(data);
 				if(data.code=="200"){
 					
 					sessionStorage.setItem("page",data.data.pageNum);
@@ -140,7 +291,9 @@
 		})
 	}
 	$.load(1);
-	$.load(2);
+	if (sessionStorage.pages>1) {
+		$.load(2);
+	} 
 	$.ajax({
 		url:"http://8.129.177.19:8085/user/follower",
 		dataType:'json',//服务器返回json格式数据
@@ -179,6 +332,11 @@
 	$("nav.dynamic-taps a.dynamic-links-a").click(function(){
 		$("a.dynamic-links-a").removeClass("is-active");
 		$(this).addClass('is-active');
+		$("div.content").empty();
+		$("div.content").append($("<div></div>"))
+		if ($(this).text()==='推荐') {
+			$.load(1);
+		}
 	})
 })()
 
