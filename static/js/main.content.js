@@ -41,7 +41,10 @@
 				if (dynamic_date===nowdate) {
 					return "前天 "+date.format("HH:MM");
 				} else{
-					return date.format("yyyy-mm-dd HH:MM");
+					if(date.format("yyyy")===new Date().format("yyyy")){
+						return date.format("mm月dd日 HH:MM");
+					}
+					return date.format("yyyy年mm月dd日 HH:MM");
 				}
 			}
 		}
@@ -118,7 +121,13 @@
 				text = '赞同 ';
 			}
 			starCount.append(star,text,count);
-			let commentCount=$("<div class='content-comment'><span class='iconfont icon-icon-test'></span>"+dynamic.commentCount+"条评论</div>");
+			let text_comment;
+			if (dynamic.commentCount===0) {
+				text_comment="添加评论";
+			} else{
+				text_comment=dynamic.commentCount+"条评论";
+			}
+			let commentCount=$("<div class='content-comment'><span class='iconfont icon-icon-test'></span>"+text_comment+"</div>");
 			message_actions.append(starCount,commentCount);
 			
 			cord_content.append(message,message_pic,message_actions);
@@ -137,7 +146,7 @@
 		dynamic_load = false;
 		/* 添加DOM事件 */
 		$("div.card").ready(function(e){
-			console.log(1);
+			//console.log(1);
 			/* 赞同动态 */
 			$(".contentItem button").click(function (e) {
 				e.stopPropagation();
@@ -203,8 +212,212 @@
 					
 				}
 			})
+			/* 发布评论框 */
+			$.input_comment = function (text,dynamic,touser) {
+				let div = $("<div class='input-comment'>");
+				let form = $("<form class='comment-form' autocomplete='off'>");
+				let div_item = $("<div class='form-item'></div>");
+				let label = $("<label class='comment-label'></label>");
+				let p_span=$("<p class='p-limit'><span>0</span>/100</p>")
+				let input = $("<p contenteditable='true' id='comment'>");
+				let span = $("<span class='p-span'>写下你的评论(100字以内)</span>");
+				let button = $("<button class='Button button--pink'>发表</button>");
+				label.append(p_span,input,span);
+				div_item.append(label,button);
+				form.append(div_item);
+				div.append(form);
+				label.click(function () {
+					//console.log($(this).children("span"));
+					$(this).children("span").hide(100);
+				})
+				label.mouseleave(function () {
+					if (input.text().length===0) {
+						$(this).children("span").show(500);
+					} 
+				})
+				/* 动态字数限制和相应的设置 */
+				let lock=true;
+				let fullContent="";
+				/* 解决中文输入法的问题 */
+				input.on('compositionstart', function () {
+				    lock = false;
+				});
+				input.on('compositionend', function (event) {
+				    lock = true;
+				    addInput(event, $(this));
+				});
+				input.on('keyup input propertychange', function (event) {
+				    
+					addInput(event, $(this));
+				});
+				 
+				// 粘贴div(contenteditable = "true")富文本转为纯文本
+				input.on("paste", function (e) {
+				    e.stopPropagation();
+				    e.preventDefault();
+				    let text = '', event = (e.originalEvent || e);
+				    if (event.clipboardData && event.clipboardData.getData) {
+				        text = event.clipboardData.getData('text/plain');
+				    } else if (window.clipboardData && window.clipboardData.getData) {
+				        text = window.clipboardData.getData('Text');
+				    }
+				    if (document.queryCommandSupported('insertText')) {
+				        document.execCommand('insertText', false, text);
+				    } else {
+				        document.execCommand('paste', false, text);
+				    }
+				});
+				 
+				// 字数限制
+				function addInput(event, that) {
+				    let _words = that.text();
+				    let _this = that;
+				    if (lock) {
+				        let num = _words.length;
+				 
+				        if (num >= 100) {
+				            num = 100;
+				            if (event.target.style.borderColor == ('red' || 'rgb(205, 205, 205)')) {
+				                event.target.innerText = fullContent;
+				            } else {
+				                event.target.innerText = _words.substring(0, 100);
+				                _this.css('border-color', 'red');
+				                that.prev().css('color', 'red');
+				                fullContent = _words.substring(0, 100);
+				            }
+				            set_focus(that);
+				        } else {
+				            _this.css('border-color', '#CDCDCD');
+				            that.prev().css('color', '#CDCDCD');
+				            fullContent = ''
+				        }
+				        that.prev().children("span").text(num);
+				    } else if (fullContent) {
+				        // 目标对象：超过100字时候的中文输入法
+				        // 原由：虽然不会输入成功，但是输入过程中字母依然会显现在输入框内
+				        // 弊端：谷歌浏览器输入法的界面偶尔会闪现
+				        event.target.innerText = fullContent;
+				        lock = true;
+				        set_focus(that);
+				    }
+				}
+				 
+				// 定位div(contenteditable = "true")；超过字数光标定位到末端
+				function set_focus(e) {
+					console.log(e)
+					e.focus();
+					if ($.support.msie) {
+					    let range = document.selection.createRange();
+					    this.last = range;
+					    range.moveToElementText(e[0]);
+					    range.select();
+					    document.selection.empty(); // 取消选中
+					} else {
+					    let range = document.createRange();
+					    range.selectNodeContents(e[0]);
+					    range.collapse(false);
+					    let sel = window.getSelection();
+					    sel.removeAllRanges();
+					    sel.addRange(range);
+					}
+				}
+				/* 提交评论到后台 */
+				button.click(function (event) {
+					event.stopPropagation()
+					event.preventDefault();
+					let fd = new Object();
+					fd.message=input.text();
+					fd["dynamicId"]=dynamic.dynamicId;
+					fd.userName=sessionStorage.username;
+					fd["userId"]=sessionStorage.userId;
+					if(typeof touser !=="undefined"){
+						fd["toUserId"]=touser.userId;
+						fd.toUserName=touser.userName;
+					}
+					console.log(JSON.stringify(fd));
+					$.ajax({
+						url:"http://8.129.177.19:8085/comment/dynamic",
+						dataType:'json',//服务器返回json格式数据
+						data:JSON.stringify(fd),
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+							//console.log(data);
+							if(data.code=="200"){
+								console.log(data);
+								
+								//hearder_info(true);
+							}else{
+								console.log(data);
+							}
+						},
+						error:function(data){
+							//hearder_info(false);
+							console.log(data);
+						}
+					})
+				})
+				return div;
+			}
+			/* 根据动态ID查询指定动态 调用会同时获取最近的十条评论 */
+			$.comments=function (dynamic) {
+				console.log(dynamic);
+				$.ajax({
+					url:"http://8.129.177.19:8085/withfriend/dynamic/"+dynamic.dynamicId,
+					dataType:'json',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；
+					success:function(data){
+						//console.log(data);
+						if(data.code=="200"){
+							console.log(data);
+							
+							//hearder_info(true);
+						}else{
+							console.log(data);
+						}
+					},
+					error:function(data){
+						//hearder_info(false);
+						console.log(data);
+					}
+				})
+			}
+			/*显示动态评论*/
+			$.dynamic_comment = function (dynamic,text) {
+				let comments=$("<div class='comments'>");
+				/* 显示评论总数 */
+				//console.log(text);
+				if (text==='添加评论') {
+					text="还没有评论";
+				}else{
+					let div_2 = $("<div></div>");
+					div_2.append($.comments(dynamic))
+					comments.append(div_2);
+				}
+				let div_1=$("<div class='comments-topbar'><h2 class='topbar-title'>"+text+"</h2></div>");
+				/* 评论发布框 */
+				let div_3 =$("<div></div>");
+				div_3.append($.input_comment("写下你的评论",dynamic));
+				comments.prepend(div_1);
+				comments.append(div_3);
+				return comments;
+			}
 			/* 显示部分评论 */
-			
+			$(".contentItem div.content-comment").click(function (event) {
+				event.stopPropagation();
+				let dynamic= eval('(' + $(this)
+				.parent()
+				.parent()
+				.parent()
+				.data("content") + ')');
+				if ($(this).parent().next().length===0) {
+					$(this).parent().after($.dynamic_comment(dynamic,$(this).text()));
+				} else{
+					$(this).parent().next().remove()
+				}
+				
+			})
 			/* 显示删除按钮 */
 			$("div.delete-dynamic").mouseenter(function (event) {
 				event.stopPropagation();

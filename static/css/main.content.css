@@ -13,8 +13,7 @@
 }
 .quanquan-dynamic{
 	width: 100%;
-	background-color: rgba(189,169,164,1);
-	box-shadow: 0 1px 3px rgba(18,18,18,.1);
+	box-shadow: 0 1px 3px rgba(0,0,0,.8);
 }
 .dynamic-top{
 	border-bottom: 1px solid pink;
@@ -42,7 +41,7 @@
 .card{
 	padding: 20px;
 	border-bottom: 1px solid pink;
-	animation: card-up 2s ease-in-out forwards;
+	animation: card-up 1s ease-in-out forwards;
 }
 @keyframes card-up{
 	from{opacity: 0;display: none;}
@@ -107,7 +106,7 @@
 	margin-left: 2px;
 }
 .time{
-	color: mistyrose;
+	color: #DB7093;
 }
 .message-image{
 	
@@ -144,6 +143,8 @@
 	position: relative;
 	text-align: center;
 	border: none;
+	background: pink;
+	color: deeppink;
 }
 .contentItem .button-like{
 	animation: like-ani .5s ease-in-out forwards;
@@ -153,10 +154,10 @@
 }
 @keyframes star-ani{
 	from{color: white;background: #DB7093;}
-	to{color:#8590a6;}
+	to{color:deeppink;}
 }
 @keyframes like-ani{
-	from{color:#8590a6;}
+	from{color:deeppink;}
 	to{color: white;background: #DB7093;}
 }
 .content-comment{
@@ -165,16 +166,82 @@
 	text-align: center;
 	cursor: pointer;
 }
+.content-comment:hover{
+	color: #306FB4;
+}
 .contentItem .iconfont{
 	font-size: 16px;
 	padding-right: 6px;
+}
+/* 动态评论框 */
+.comments{
+	margin-top: 10px;
+	overflow: visible;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.8);
+	border: 1px solid silver;
+}
+.comments-topbar{
+	height: 40px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	color: black;
+	border-bottom: 1px solid pink;
+}
+.topbar-title{
+	padding-left: 20px;
+}
+.input-comment{
+	border-top: 1px solid pink;
+	padding: 10px 20px;
+	position: relative;
+}
+.comment-form{
+	position: relative;
+}
+.form-item{
+	display: flex;
+	align-items: center;
+}
+.comment-label{
+	flex: 1 1;
+	padding: 3px 0;
+	padding-left: 10px;
+	padding-right: 50px;
+	border: 1px solid #8590A6;
+	margin-right: 20px;
+	border-radius: 3px;
+	background-color: white;
+	position: relative;
+}
+.comment-label .p-limit{
+	width: 50px;
+	position: absolute;
+	top: 3px;
+	right: 0;
+}
+.comment-label .p-span{
+	position: absolute;
+	color:#999999;
+	top: 3px;
+	cursor: text;
+}
+.comment-label p{
+	height: auto;
+	width: 100%;
+	padding:0;
+	font-size: 15px;
+	border: solid 0px;
+	outline:none;
+	cursor: text;
 }
 /* 动态删除按钮 */
 .delete-dynamic{
 	position: absolute;
 	top: 0;
 	right: 20px;
-	color: #E5E5E5;
+	color: #DB7093;
 	cursor: pointer;
 }
 .delete{
@@ -182,13 +249,13 @@
 	width: 100px;
 	right: 0;
 	position: absolute;
-	background-color: #F6F6F6;
+	background-color: #DB7093;
 	border-radius: 3px;
 }
 .delete .triangle{
 	top: -8px;
 	left: 80%;
-	border-bottom: 8px solid #F6F6F6;
+	border-bottom: 8px solid #DB7093;
 	border-left: 8px solid transparent;
 	border-right: 8px solid transparent
 }
@@ -202,5 +269,5 @@
 	width: 100%;
 	display: flex;
 	justify-content: center;
-	color: #121212;
+	color: whitesmoke;
 }
