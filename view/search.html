@@ -6,9 +6,10 @@
 		<link rel="shortcut icon" type="image/x-icon" href="/QUANQUAN/static/img/favicon.ico"/>
 		<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_2231634_tlqwkuvi4hk.css" />
 		<link rel="stylesheet" type="text/css" href="/QUANQUAN/static/css/main.top.css" />
+		<link rel="stylesheet" type="text/css" href="/QUANQUAN/static/css/main.content.css"/>
 		<script type="text/javascript" src="/QUANQUAN/static/js-config/jquery-3.4.1.min.js"></script>
 		<script type="text/javascript" src="/QUANQUAN/static/js-config/jquery-ui.min.js"></script>
-		<script src="/QUANQUAN/static/js-config/wangEditor.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/QUANQUAN/static/js-config/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<div id="base">
@@ -18,7 +19,7 @@
 						<div class="baseHeader-nav">
 							<a class="QUANQUANLOGE compar ico-header" href="/QUANQUAN/index.html"></a>
 							<ul class="hearder-top">
-								<li class="tap-items"><a class="links-a active" href="/QUANQUAN/index.html">首页</a></li>
+								<li class="tap-items"><a class="links-a" href="/QUANQUAN/index.html">首页</a></li>
 								<li class="tap-items"><a class="links-a" href="/QUANQUAN/view/people/user.homepage.html">个人中心</a></li>
 								<li class="tap-items"><a class="links-a" href="javascript:void(0);">私信</a></li>
 							</ul>
@@ -27,7 +28,7 @@
 									<div>
 										<div class="search">
 											<label class="SearchBar-input">
-												<input type="text" class="input" name="search"/>
+												<input type="text" class="input" name="search" autocomplete="off"/>
 												<button type="button" class="Button SearchBar-searchButton">
 													<span class="iconfont icon-search"></span>
 												</button>
@@ -46,7 +47,15 @@
 					</header>
 				</div>
 				<main class="base-main" role="main">
-					
+					<div class="main-content">
+						<div class="quanquan-dynamic">
+							<div class="dynamic-list">
+								<div class="content">
+									<div></div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</main>
 				<div class="backtop">
 					<button class="Button button--pink button-nav" title="返回顶部">
@@ -61,6 +70,7 @@
 			</div>
 		</div>
 	</body>
-	<script type="text/javascript" src="/QUANQUAN/static/js/search.js"></script>
 	<script type="text/javascript" src="/QUANQUAN/static/js/main.top.js"></script>
+	<script type="text/javascript" src="/QUANQUAN/static/js/main.content.js"></script>
+	<script type="text/javascript" src="/QUANQUAN/static/js/search.js"></script>
 </html>

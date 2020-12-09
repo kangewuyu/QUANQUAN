@@ -14,6 +14,7 @@
 .quanquan-dynamic{
 	width: 100%;
 	box-shadow: 0 1px 3px rgba(0,0,0,.8);
+	background-color: white;
 }
 .dynamic-top{
 	border-bottom: 1px solid pink;
@@ -47,6 +48,7 @@
 	from{opacity: 0;display: none;}
 	to{opacity: 1;display: block;}
 }
+
 .card-delete{
 	animation: card-delete 1s ease-in-out forwards;
 }
@@ -57,8 +59,7 @@
 .item-dynamic{
 	position: relative;
 	overflow: initial;
-	display: flex;
-	align-items: flex-start;
+	transition: height .5s ease-in-out;
 }
 .dynamic-user{
 	margin-bottom: 10px;
@@ -77,12 +78,19 @@
 	height: 100%;
 	border-radius: 50%;
 }
+/* 动态或评论的所有者 */
 .username{
+	margin-bottom: 2px;
+}
+.dynamic-username{
 	font-size: 20px;
 }
 .username .author-name{
 	position: relative;
-	color: pink;
+	
+}
+.dynamic-username .author-name{
+	color:#5A656C;
 }
 .username .author-name:hover::before{
 	position: absolute;
@@ -90,24 +98,50 @@
 	content: "";
 	height: 1px;
 	width: 96%;
-	background-color: pink;
 	left: 2%;
 	margin: 0 auto;
-	bottom: 0;
+	bottom: 1px;
 }
-.dynamic-message{
-	width: 100%;
-	margin-left: 20px;
-	padding-top: 2px;
-	padding-right: 40px;
+.dynamic-username .author-name:hover::before{
+	background-color: #5A656C;
 }
-.dynamic-time{
+.comments-username .author-name:hover::before{
+	background-color: #5A656C;
+	width: 90%;
+}
+.role-info{
+	color: #B8B8B8;
+}
+/* 时间显示 */
+.time-div{
 	font-size:12px;
 	margin-left: 2px;
 }
-.time{
+.time-div .time{
+	padding-left: 10px;
+}
+.dynamic-time .time{
 	color: #DB7093;
 }
+.comments-time{
+	display: flex;
+}
+.comments-time .time{
+	margin-right: 10px;
+}
+/* 动态内容 */
+.dynamic-message{
+	width: 94%;
+	padding-left: 56px;
+	padding-top: 4px;
+}
+.text{
+	cursor: pointer;
+}
+.text:hover{
+	color: #54A4D7;
+}
+/* 动态图片 */
 .message-image{
 	
 	margin: 6px 0;
@@ -128,8 +162,8 @@
 	cursor: pointer;
 }
 .dynamic-image{
-	width: 230px;
-	height: 230px;
+	width: 298px;
+	height: 298px;
 }
 .contentItem{
 	position: relative;
@@ -137,9 +171,11 @@
 	align-items: center;
 	text-align: center;
 	justify-content: flex-start;
+	cursor: default;
 }
 .contentItem .button-star{
 	padding: 0 10px;
+	margin-right: 20px;
 	position: relative;
 	text-align: center;
 	border: none;
@@ -161,9 +197,7 @@
 	to{color: white;background: #DB7093;}
 }
 .content-comment{
-	margin-left: 20px;
 	position: relative;
-	text-align: center;
 	cursor: pointer;
 }
 .content-comment:hover{
@@ -178,8 +212,8 @@
 	margin-top: 10px;
 	overflow: visible;
 	border-radius: 4px;
-	box-shadow: 0 1px 3px rgba(0,0,0,.8);
-	border: 1px solid silver;
+	border: 1px dashed #E5E5E5;
+	cursor: default;
 }
 .comments-topbar{
 	height: 40px;
@@ -192,6 +226,87 @@
 .topbar-title{
 	padding-left: 20px;
 }
+/* 具体评论 */
+.nest-comment{
+	position: relative;
+	animation: coment 1s ease-in-out forwards;
+}
+@keyframes coment{
+	from{opacity: 0;height: 0;}
+	to{opacity: 1;height: auto;}
+}
+.nest-comment:not(:last-child)::after{
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: block;
+	margin: 0 20px;
+	border-bottom:1px dashed pink;
+}
+.commetsItem{
+	padding: 6px 20px;
+	position: relative;
+}
+.commetsItem-user{
+	position: relative;
+	margin-right: 10px;
+	display: flex;
+	justify-content: flex-start;
+}
+.comment-meassge{
+	margin-left: 10px;
+}
+/* 评论页数显示 */
+.commentPages{
+	padding: 16px 20px;
+	display: flex;
+	justify-content: center;
+	border-top: 1px dashed pink;
+}
+.Button::-moz-focus-inne{
+	padding: 0;
+	border: 0;
+}
+
+.button-page{
+	color: #121212;
+	-webkit-transition: color .2s;
+	transition: color .2s;
+	padding: 0 15px;
+	animation: page .3s linear forwards;
+}
+@keyframes page{
+	from{opacity: 0;}
+	to{opacity: 1;}
+}
+.button-plan,.button-item-number{
+	cursor: pointer;
+	border: none;
+	line-height: inherit;
+	background-color: transparent;
+	border-radius: 0;
+	transition: color .3s linear;
+}
+.button-plan:hover,.button-item-number:hover{
+	color: #FFC0CB;
+}
+.button-plan:disabled {
+    cursor: default;
+    opacity: .5;
+	color: #B5B5B5;
+    pointer-events: none;
+}
+.button-el{
+	border: none;
+	background: none;
+}
+.button-el:disabled {
+    cursor: default;
+    pointer-events: none;
+}
+/* 评论输入 */
 .input-comment{
 	border-top: 1px solid pink;
 	padding: 10px 20px;
@@ -208,7 +323,7 @@
 	flex: 1 1;
 	padding: 3px 0;
 	padding-left: 10px;
-	padding-right: 50px;
+	padding-right: 60px;
 	border: 1px solid #8590A6;
 	margin-right: 20px;
 	border-radius: 3px;
@@ -216,7 +331,7 @@
 	position: relative;
 }
 .comment-label .p-limit{
-	width: 50px;
+	width: 60px;
 	position: absolute;
 	top: 3px;
 	right: 0;
@@ -251,6 +366,11 @@
 	position: absolute;
 	background-color: #DB7093;
 	border-radius: 3px;
+	animation: delete-dynamic .8s linear forwards;
+}
+@keyframes delete-dynamic{
+	from{opacity: 0;}
+	to{opacity: 1;}
 }
 .delete .triangle{
 	top: -8px;
@@ -270,4 +390,92 @@
 	display: flex;
 	justify-content: center;
 	color: whitesmoke;
+}
+/* 相应信息展示 */
+.user-info{
+	margin-top: 8px;
+	position: absolute;
+	width: 307;
+	min-height: 118;
+	background-color: transparent;
+}
+.user-info-delete{
+	animation:delete-user .4s linear forwards;
+}
+@keyframes delete-user{
+	from{opacity: 1;}
+	to{opacity: 0;}
+}
+.havecard{
+	padding:0 12px;
+	font-size:16px;
+	animation: loding .6s ease forwards;
+	-webkit-box-shadow:0 5px 20px rgba(18,18,18,.1);
+	box-shadow:0 5px 20px rgba(18,18,18,.1);
+	background:#fff;
+	border-radius:2px;
+	display: flex;
+	justify-content: flex-start;
+}
+.hoverCard-titlecontainer{
+	position:relative;
+	display:-webkit-box;
+	display:-ms-flexbox;
+	display:flex;
+	padding:8px 0;
+	border-bottom:1px solid #f6f6f6;
+	-webkit-box-align:center;
+	-ms-flex-align:center;
+	align-items:center;
+	flex-direction: column;
+}
+.hoverCard-titlecontainer>img{
+	border-radius: 50%;
+}
+.hovercard-titleText{
+	margin-top: 10px;
+	color: #5A656C;
+}
+.hovercard-item{
+	margin-left: 20px;
+	padding: 10px 0;
+}
+.hoverNumber{
+	margin-bottom: 10px;
+	display: flex;
+	justify-content:space-around;
+}
+.number-itemValue{
+	font-size: 18px;
+	font-weight: 800;
+}
+.hovercard-button{
+	display: flex;
+	justify-content: space-around;
+	align-content: space-between;
+}
+.hovercard-button .iconfont{
+	font-size: 16px;
+}
+.hovercard-button .Button{
+	margin:0 5px;
+	width: 102px;
+}
+
+@keyframes loding{
+	from{opacity: 0;}
+	to{opacity: 1;}
+}
+/* 动态详细展示 */
+.dynamic-model{
+	position: relative;
+	width: 1000px;
+	margin: 0 auto;
+	height: 880px;
+	background-color: white;
+}
+.dynamci-model-inner{
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
 }

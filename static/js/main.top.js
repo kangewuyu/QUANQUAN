@@ -1,5 +1,5 @@
 !function(e,t){
-	$("html,body").animate({scrollTop: 0}, 1000);
+	//$("html,body").animate({scrollTop: 0}, 0);
 	$.ajaxSetup({
 		headers:{
 			/* token验证 */
@@ -59,7 +59,7 @@
 					header.addClass("is-fixed").css({"width":"100%","top":"0"});
 					if(header.next()===null||typeof header.next()=='undefined'||header.next().length===0){
 						header.parent().append(
-								$("<div class='holder' style='position: relative;inset: 0px; display: block; float: none; margin: 0px; height: 52px;'></div>"));
+								$("<div class='holder' style='position: relative;inset: 0px; display: block; float: none; margin: 0px; height: 60px;'></div>"));
 					}
 				}else{
 					header.parent().children().eq(1).remove();
@@ -142,6 +142,9 @@
 	};
 	/* 登录弹窗 */
 	$.loginDIV = function(){
+		let body=$("body");
+		body.children("div").eq(2).remove();
+		
 		let div = $("<div>");
 		let div_div = $("<div class='popup'>");
 		let pop_div = $("<div class='box login-box'>");
@@ -158,6 +161,10 @@
 		pop_div.append(from_div,em_close);
 		div_div.append(pop_div);
 		div.append(div_div);
+		body.css({ 
+		　　"overflow-x":"hidden",
+		　　"overflow-y":"hidden"
+		});
 		div_div.ready(function() {
 			/* 禁止回车提交表单 */
 			$("input").each(
@@ -178,6 +185,10 @@
 			$(".icon-close").click(function(){
 				$(".box.login-box").addClass("box-delete");
 				setTimeout(function(){div.remove();},600);
+				body.css({
+				　　"overflow-x":"auto",
+				　　"overflow-y":"auto"
+				});
 			})
 			$(".button-login").click(function(){
 				if($("input[name='xh']").val()===null||$.trim($("input[name='xh']").val()).length===0){
@@ -191,7 +202,7 @@
 				}
 				$(".popup p.login-tips").text("");
 				$("#login").submit(function(e){
-					e.preventDefault();
+					e.preventDefault();/* 阻止默认事件 */
 					login();
 				});
 			});
@@ -209,7 +220,7 @@
 				
 			})
 		})
-		return div;
+		body.append(div);
 	}
 	
 	
@@ -225,6 +236,7 @@
 			$('.Button.SearchBar-searchButton').css("color","pink");
 			$('.Button.SearchBar-searchButton').removeClass("button--pink");
 		} else{
+			$('.Button.SearchBar-searchButton').css("color","");
 			$('.Button.SearchBar-searchButton').addClass("button--pink");
 		}
 	})
@@ -306,9 +318,7 @@
 			hearder_info.append(div);
 			div.ready(function(){
 				$(".info-button .Button").click(function() {
-					let body=$("body");
-					body.children("div").eq(body.children("div").length).remove();
-					body.append($.loginDIV());
+					$.loginDIV();
 				});
 			})
 		}
@@ -320,6 +330,12 @@
 	})
 	/* 动态发布弹窗 */
 	$.dynamicDIV = function () {
+		let body=$("body");
+		body.children("div").eq(2).remove();
+		body.css({
+		　　"overflow-x":"hidden",
+		　　"overflow-y":"hidden"
+		});
 		let div = $('<div>'
 				+'<div class="dynamic">'
 					+'<div class="box box-dynamic">'
@@ -364,8 +380,13 @@
 			}
 			$(".dynamic-tips .tips").hide();
 			$(".icon-close").click(function(){
+				
 				$(".box.box-dynamic").addClass("box-delete");
 				setTimeout(function(){div.remove()},600);
+				body.css({
+				　　"overflow-x":"auto",
+				　　"overflow-y":"auto"
+				});
 			})
 			/* 添加并预览图片 */
 			$("#upload").change(function(){
@@ -414,8 +435,12 @@
 					$('.content-img .file').show();
 				}
 			})
+			/* 限制动态的发布 */
+			let c=false;
 			$(".dynamic-footer .Button").click(function(){
-				
+				if(c){
+					return false;
+				}
 				let message = $("#dynamic").serializeJson().message;
 				//console.log(message.length<10);
 				if (message.length<6) {
@@ -436,7 +461,7 @@
 				var fd = new FormData();
 				
 				//e.forEach()
-				console.log(e.length);
+				//console.log(e.length);
 				for (let i = 0; i < e.length; i++) {
 					//console.log(e.eq(i));
 					var dataurl=e.eq(i).attr("src");
@@ -456,7 +481,7 @@
 				fd.append("message",$("#dynamic").serializeJson().message);
 				//console.log(fd.getAll("message"));
 				
-				
+				c=true;
 				//上传到服务器
 				$.ajax({
 					url: "http://8.129.177.19:8085/withfriend/releasedc",
@@ -466,27 +491,26 @@
 					processData: false,  
 					contentType: false,
 					data: fd,
+					async:true,
 					success: function (data) {
 						console.log(data);
-						$(".box.box-dynamic").addClass("box-delete");
-						setTimeout(function(){div.remove()},600);
+						c=false;
 						//location = window.location;
 					}
 				});
-				
+				$(".box.box-dynamic").addClass("box-delete");
+				setTimeout(function(){div.remove()},600);
 			})
 		})
 		
-		return div;
+		body.append(div);
 	}
 	/* 发布动态 */
 	$("button.SearchBar-button").click(function(){
-		let body=$("body");
-		body.children("div").eq(body.children("div").length).remove();
 		if ($.if_login()) {
-			body.append($.dynamicDIV());
+			$.dynamicDIV();
 		} else{
-			body.append($.loginDIV());
+			$.loginDIV();
 		}
 		
 	})
