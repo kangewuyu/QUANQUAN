@@ -1,46 +1,67 @@
 (function(){
-	
-	
+	$.ajaxSetup({
+		contentType:'application/json',
+	})
 	// 该事件是核心
+	let count=0;
 	window.addEventListener('storage', function(event) {
+		
 		if (event.key == 'getSessionStorage') {
+			count++;
 			// 已存在的标签页会收到这个事件
 			localStorage.setItem('sessionStorage', JSON.stringify(sessionStorage));
 			localStorage.removeItem('sessionStorage');
 	
 		} else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+			count--;
 			// 新开启的标签页会收到这个事件
 			var data = JSON.parse(event.newValue),
 					value;
-	
+					//console.log(key)
+					console.log(data)
 			for (key in data) {
 				sessionStorage.setItem(key, data[key]);
 			}
+			
+		}else if (event.key =='setItem'&&event.newValue!=null) {
+			/* 实现登录后所有页面共享token */
+			sessionStorage.setItem("token",event.newValue);
+			localStorage.removeItem('setItem');
+			location=window.location;
+		}else if (event.key=='removeItem'&&event.newValue!=null) {
+			/* 实现退出登录后所有页面移除token */
+			sessionStorage.removeItem("token");
+			localStorage.removeItem('removeItem');
+			location=window.location;
 		}
-		
-		
 	});
-	
-//$("html,body").animate({scrollTop: 0}, 0);
-	$.ajaxSetup({
-		headers:{
-			/* token验证 */
-			token:sessionStorage.getItem("token"),
-		},
-		contentType:'application/json',
-	});
-	
+	new Promise(function(resolve,reject){
+		//console.log(2)
+			// 这个调用能触发目标事件，从而达到共享数据的目的
+			if (!sessionStorage.length) {
+				localStorage.setItem('getSessionStorage', Date.now());
+			} 
+			resolve()
+		}).then(function(){
+			setTimeout(function () {
+				$.ajaxSetup({
+					headers:{
+					/* token验证 */
+						token:sessionStorage.getItem("token"),
+					},
+				});
+				//console.log(sessionStorage.token)
+			},100);
+		}).catch(function(){
+			console.log(4)
+		})
+	/* 清除sessionStorge中的search字段 */
 	if(location.search.length===0){
 		sessionStorage.removeItem("search");
 	}
-	
 	/* 判断是否登录 */
-	$.if_login = async function(){
+	$.if_login = function(){
 		let e;
-		if (!sessionStorage.length) {
-				// 这个调用能触发目标事件，从而达到共享数据的目的
-			localStorage.setItem('getSessionStorage', Date.now());
-		};
 		$.ajax({
 			url:"http://8.129.177.19:8085/user/selfuser",
 			dataType:'json',//服务器返回json格式数据
@@ -56,25 +77,26 @@
 					//hearder_info(true);
 					e=true;
 				}else{
-					e=false
+					//sessionStorage.clear()
+					console.log(data);	
+					e=false;
 				}
 			},
 			error:function(){
 				//hearder_info(false);
-				e= false;
+				e=false;
 			}
 		});
-		return e;
+		return e;	
 	}
-	
 	/* 判断是否登录 */
-		//console.log($.if_login())
+	setTimeout(function () {
 		if ($.if_login()) {
 			hearder_info(true)
 		} else{
 			hearder_info(false);
 		}
-	
+	},150)
 	/* 登录 */
 	function login(){
 		$.ajax({
@@ -87,8 +109,10 @@
 			success:function(data){	
 				if (data.code == '200') {
 					sessionStorage.setItem("token",data.msg);
+					localStorage.setItem("setItem",data.msg);
 					$(".popup p.login-tips").text("");
 					location = window.location;
+					
 				} else if(data.code=='400'){
 					$(".popup p.login-tips").text("用户名或密码错误");
 				}		
@@ -150,7 +174,7 @@
 		});
 		div_div.ready(function() {
 			/* 禁止回车提交表单 */
-			$("input").each(
+			$("#login input").each(
 					function(){
 						$(this).keypress( function(e) {
 							var key = window.event ? e.keyCode : e.which;
@@ -189,8 +213,9 @@
 					login();
 				});
 			});
-			$(".button-passwd").click(function(e) {
+			$(".button-password").click(function(e) {
 				e.preventDefault();/* 阻止默认事件 */
+				e.stopPropagation()
 				if ($("input[name='passwd']").attr("type")==="password") {
 					$("input[name='passwd']").attr("type","text");
 					$(this).children().eq(0).removeClass("icon-browse");
@@ -205,7 +230,6 @@
 		})
 		body.append(div);
 	}
-	
 	
 	/* 搜索框样式 */
 	if ($("input[name='search']").val().length===0) {
@@ -281,6 +305,7 @@
 								timeout:10000,//超时时间设置为10秒；
 								error:function(){
 									sessionStorage.removeItem("token");
+									localStorage.setItem("removeItem",Date.now());
 									location = window.location;
 								}
 							})
@@ -358,8 +383,7 @@
 			//字数限制和显示
 			function limit(t){
 				let a = t.val().length;
-				t.next().children().eq(0).text(a);
-				
+				t.next().children().eq(0).text(a);	
 			}
 			$(".dynamic-tips .tips").hide();
 			$(".icon-close").click(function(){
@@ -484,7 +508,6 @@
 				setTimeout(function(){div.remove()},600);
 			})
 		})
-		
 		body.append(div);
 	}
 	/* 发布动态 */
@@ -494,7 +517,5 @@
 		} else{
 			$.loginDIV();
 		}
-		
 	})
-	
 })();

@@ -111,7 +111,6 @@
 				}
 			})
 		}
-		
 		return text;
 	}
 	/* 生成button */
@@ -295,7 +294,8 @@
 		input.on('keyup input propertychange', function (event) {
 		    event.stopPropagation();
 		    event.preventDefault();
-			addInput(event, $(this));
+			lock = true;
+			addInput(event, $(this),lock);
 			if($(this).text().length!==0){
 				$(this).next("span").hide(100);
 			}else{
@@ -331,7 +331,59 @@
 		        document.execCommand('paste', false, text);
 		    }
 		});
+		// 定位div(contenteditable = "true")；超过字数光标定位到末端
+		function set_focus(e) {
+			//console.log(e)
+			e.focus();
+			if ($.support.msie) {
+			    let range = document.selection.createRange();
+			    this.last = range;
+			    range.moveToElementText(e[0]);
+			    range.select();
+			    document.selection.empty(); // 取消选中
+			} else {
+			    let range = document.createRange();
+			    range.selectNodeContents(e[0]);
+			    range.collapse(false);
+			    let sel = window.getSelection();
+			    sel.removeAllRanges();
+			    sel.addRange(range);
+			}
+		}
 		
+		let fullContent="";
+		// 字数限制
+		function addInput(event, then,lock) {
+		    let _words = then.text();
+		    let _this = then;
+		   if (lock) {
+		        let num = _words.length;
+		        if (num >= 100) {
+		            num = 100;
+		            if (event.target.style.borderColor == ('red' || 'rgb(205, 205, 205)')) {
+		                event.target.innerText = fullContent;
+		            } else {
+		                event.target.innerText = _words.substring(0, 100);
+		                //_this.css('border-color', 'red');
+		                then.prev().css('color', 'red');
+		                fullContent = _words.substring(0, 100);
+		            }
+		            set_focus(then);
+		        } else {
+		            //_this.css('border-color', '#CDCDCD');
+		            then.prev().css('color', '#CDCDCD');
+		            fullContent = ''
+		        }
+		        then.prev().children("span").text(num);
+		    } else if (fullContent) {
+		        // 目标对象：超过100字时候的中文输入法
+		        // 原由：虽然不会输入成功，但是输入过程中字母依然会显现在输入框内
+		        // 弊端：谷歌浏览器输入法的界面偶尔会闪现
+		        event.target.innerText = fullContent;
+		        lock = true;
+		        set_focus(then);
+		    }
+		}
 		 
 		
 		/* 提交评论到后台 */
@@ -358,6 +410,7 @@
 				data:JSON.stringify(fd),
 				type:'post',//HTTP请求类型
 				timeout:10000,//超时时间设置为10秒；
+				async:true,
 				success:function(data){
 					//console.log(data);
 					if(data.code=="200"){
@@ -520,6 +573,7 @@
 					dataType:'json',//服务器返回json格式数据
 					type:'get',//HTTP请求类型
 					timeout:10000,//超时时间设置为10秒；
+					async:true,
 					success:function(data){
 						//console.log(data);
 						if (data.code=="200") {
@@ -544,6 +598,7 @@
 					dataType:'json',//服务器返回json格式数据
 					type:'get',//HTTP请求类型
 					timeout:10000,//超时时间设置为10秒；
+					async:true,
 					success:function(data){
 						//console.log(data);
 						if (data.code=="200") {
@@ -570,7 +625,6 @@
 			div_2.empty();
 			$.comment_ul(div_1,dynamic,z);
 			set_focus($(this).parent().next().find("p#comment"));
-			
 		})
 		/* 添加DOM事件 */
 		cord.ready(function(e){
@@ -703,6 +757,7 @@
 							dataType:'json',//服务器返回json格式数据
 							type:'get',//HTTP请求类型
 							timeout:10000,//超时时间设置为10秒；
+							async:true,
 							success:function(data){
 								console.log(data);
 								number--;
@@ -727,6 +782,7 @@
 						dataType:'json',//服务器返回json格式数据
 						type:'get',//HTTP请求类型
 						timeout:10000,//超时时间设置为10秒；
+						async:true,
 						success:function(data){
 							//console.log(data);
 							number++;
@@ -777,6 +833,7 @@
 					}
 				})
 			})
+			
 			cord.find("a").mouseleave(function (event) {
 				event.stopPropagation();//阻止事件遍历到该节点上
 				event.preventDefault();//阻止默认事件
@@ -831,6 +888,7 @@
 						dataType:'json',//服务器返回json格式数据
 						type:'post',//HTTP请求类型
 						timeout:10000,//超时时间设置为10秒；
+						async:true,
 						success:function(data){
 							//console.log(data);
 							if(data.code=="200"){
@@ -887,7 +945,7 @@
 			dataType:'json',//服务器返回json格式数据
 			type:'get',//HTTP请求类型
 			timeout:10000,//超时时间设置为10秒；
-			async:false,
+			async:true,
 			success:function(data){
 				//console.log(data);
 				if(data.code=="200"){
@@ -914,33 +972,10 @@
 		//console.log(l)
 		if (s==="推荐"&&l===0) {
 			dynamic_load=true;
-			setTimeout(function(){load(1)},0);
+			load(1);
 			l=$(".content").children("div").eq(0).children().length
 		}
 		return false;
-	})
-	
-	
-	$.ajax({
-		url:"http://8.129.177.19:8085/user/follower",
-		dataType:'json',//服务器返回json格式数据
-		type:'get',//HTTP请求类型
-		timeout:10000,//超时时间设置为10秒；
-		async:false,
-		success:function(data){
-			
-			if(data.code=="200"){
-				console.log(data);
-				//hearder_info(true);
-				
-			}else{
-				console.log(data);
-			}
-		},
-		/* error:function(data){
-			//hearder_info(false);
-			console.log(data);
-		} */
 	})
 	/* 内容切换 */
 	$("nav.dynamic-taps a.dynamic-links-a").click(function(){
@@ -965,7 +1000,7 @@
 				dataType:'json',//服务器返回json格式数据
 				type:'get',//HTTP请求类型
 				timeout:10000,//超时时间设置为10秒；
-				async:false,
+				async:true,
 				success:function(data){
 					console.log(data);
 					if(data.code=="200"){
@@ -1001,7 +1036,7 @@
 			dataType:'json',//服务器返回json格式数据
 			type:'get',//HTTP请求类型
 			timeout:10000,//超时时间设置为10秒；
-			async:false,
+			async:true,
 			success:function(data){
 				console.log(data);
 				if(data.code=="200"){

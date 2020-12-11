@@ -378,6 +378,8 @@
 	border: solid 0px;
 	outline:none;
 	cursor: text;
+	word-wrap:break-word;
+	word-break: break-all;
 }
 /* 动态删除按钮 */
 .delete-dynamic{
