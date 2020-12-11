@@ -25,7 +25,6 @@
 			
 		}); 
 	}
-	
 	let search = $("input[name='search']");
 	search.val(sessionStorage.search);
 	//console.log(search.val());
@@ -52,6 +51,7 @@
 				} 
 				
 			}
-		} 
+		}
 	})
+
 }();

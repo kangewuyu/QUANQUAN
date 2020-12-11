@@ -1,9 +1,31 @@
-!function(e,t){
-	//$("html,body").animate({scrollTop: 0}, 0);
+(function(){
+	
+	
+	// 该事件是核心
+	window.addEventListener('storage', function(event) {
+		if (event.key == 'getSessionStorage') {
+			// 已存在的标签页会收到这个事件
+			localStorage.setItem('sessionStorage', JSON.stringify(sessionStorage));
+			localStorage.removeItem('sessionStorage');
+	
+		} else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+			// 新开启的标签页会收到这个事件
+			var data = JSON.parse(event.newValue),
+					value;
+	
+			for (key in data) {
+				sessionStorage.setItem(key, data[key]);
+			}
+		}
+		
+		
+	});
+	
+//$("html,body").animate({scrollTop: 0}, 0);
 	$.ajaxSetup({
 		headers:{
 			/* token验证 */
-			token:window.sessionStorage.token
+			token:sessionStorage.getItem("token"),
 		},
 		contentType:'application/json',
 	});
@@ -13,8 +35,12 @@
 	}
 	
 	/* 判断是否登录 */
-	$.if_login = function(){
+	$.if_login = async function(){
 		let e;
+		if (!sessionStorage.length) {
+				// 这个调用能触发目标事件，从而达到共享数据的目的
+			localStorage.setItem('getSessionStorage', Date.now());
+		};
 		$.ajax({
 			url:"http://8.129.177.19:8085/user/selfuser",
 			dataType:'json',//服务器返回json格式数据
@@ -25,8 +51,6 @@
 				if(data.code=="200"){
 					sessionStorage.setItem("userId",data.data.userId);
 					sessionStorage.setItem("username",data.data.username);
-					sessionStorage.setItem("selfFollowCount",data.data.selfFollowCount);
-					sessionStorage.setItem("followCount",data.data.followCount);
 					let pic_href = JSON.parse(data.data.avatarPicture)[0];
 					sessionStorage.setItem("pic","http://123.56.160.202/hutquan/headPhoto/"+pic_href);
 					//hearder_info(true);
@@ -44,36 +68,13 @@
 	}
 	
 	/* 判断是否登录 */
-	//console.log($.if_login())
-	if ($.if_login()) {
-		hearder_info(true)
-	} else{
-		hearder_info(false);
-	}
-	/* 页面滚动事件 */
-	$(window).scroll(function(){
-				let scrollTop=$(document).scrollTop()||$(window).scrollTop();  
-				let header = $("header");
-				if(scrollTop*1>0){
-					
-					header.addClass("is-fixed").css({"width":"100%","top":"0"});
-					if(header.next()===null||typeof header.next()=='undefined'||header.next().length===0){
-						header.parent().append(
-								$("<div class='holder' style='position: relative;inset: 0px; display: block; float: none; margin: 0px; height: 60px;'></div>"));
-					}
-				}else{
-					header.parent().children().eq(1).remove();
-			   		header.removeClass("is-fixed").css({"width":"","top":""});
-				}
-				if (scrollTop*1>$(window).height()) {
-					$("#base .backtop").addClass("backtop--hiden");
-				} else{
-					$("#base .backtop").removeClass("backtop--hiden");
-				}
-			})
-			$("#base .backtop").click(function () {
-				$("html,body").animate({scrollTop: 0}, 1000);
-			})
+		//console.log($.if_login())
+		if ($.if_login()) {
+			hearder_info(true)
+		} else{
+			hearder_info(false);
+		}
+	
 	/* 登录 */
 	function login(){
 		$.ajax({
@@ -82,6 +83,7 @@
 			dataType:'json',//服务器返回json格式数据
 			type:'post',//HTTP请求类型
 			timeout:10000,//超时时间设置为10秒；
+			async:false,
 			success:function(data){	
 				if (data.code == '200') {
 					sessionStorage.setItem("token",data.msg);
@@ -120,26 +122,7 @@
 		
 		return div;
 	}
-	/* 转化为json格式 */
-	$.fn.serializeJson =  function(filter){
-		var serializeObj={};
-		var array=this.serializeArray();
-		var str=this.serialize();
-		$(array).each(function(){
-			if(this.name!=filter){
-				if(serializeObj[this.name]){
-					if($.isArray(serializeObj[this.name])){
-						serializeObj[this.name].push(this.value);
-					}else{
-						serializeObj[this.name]=[serializeObj[this.name],this.value];
-					}
-				}else{
-					serializeObj[this.name]=this.value;
-				}
-			}
-		});
-		return serializeObj;
-	};
+	
 	/* 登录弹窗 */
 	$.loginDIV = function(){
 		let body=$("body");
@@ -259,14 +242,13 @@
 		location.href = '/QUANQUAN/view/search.html?'+"search="+search;
 	})
 	
-	
 	function hearder_info(e){
 		
 		let hearder_info = $(".baseHeader .hearder-info");
 		hearder_info.empty();
 		/* 已经登录后的头部修改 */
 		if(e){
-			let div_user = $(`<div class='user-img'><button id='Image' class='Button button-pics'><img class='user-pic' srcset='`+sessionStorage.pic+`'/></button></div>`);
+			let div_user=$(`<div class='user-img'><button id='Image' class='Button button-pics'><img class='user-pic' srcset='`+sessionStorage.getItem("pic")+`'/></button></div>`);
 			hearder_info.append(div_user);
 			/* 个人信息 */
 			div_user.ready(function(){
@@ -286,9 +268,9 @@
 					if (detailes.children().length===0) {
 						let span = $('<span class="triangle">');
 						let div = $('<div class="menu-detailes">');
-						let a_1 = $('<strong class="user">'+sessionStorage.username+'</strong>');
+						//let a_1 = $('<strong class="user">'+sessionStorage.username+'</strong>');
 						let a_2 = $('<a href="javascript:void(0);" class="user iconfont icon-switch">退出登录</a>');
-						div.append(a_1,a_2);
+						div.append(a_2);
 						detailes.append(span,div);
 						a_2.click(function(e){
 							e.preventDefault();
@@ -342,7 +324,7 @@
 						+'<div class="dynamicm-conten">'
 							+'<form class="dynamic-form" id="dynamic">'
 								+'<div class="dynamic-item">'
-									+'<img class="item-img" src="'+sessionStorage.pic+'" width="50" height="50"/>'
+									+'<img class="item-img" src="'+sessionStorage.getItem("pic")+'" width="50" height="50"/>'
 									+'<div class="dynamic-text">'
 										+'<textarea class="dynamic-textarea" name="message"  placeholder="分享你的学习和或生活动态(6-100字)" maxlength="100"></textarea>'
 										+'<p class="word-number">字数：<span></span></p>'
@@ -372,6 +354,7 @@
 			$("textarea").on("input",function(){
 				limit($(this));
 			}) 
+			
 			//字数限制和显示
 			function limit(t){
 				let a = t.val().length;
@@ -380,7 +363,6 @@
 			}
 			$(".dynamic-tips .tips").hide();
 			$(".icon-close").click(function(){
-				
 				$(".box.box-dynamic").addClass("box-delete");
 				setTimeout(function(){div.remove()},600);
 				body.css({
@@ -514,14 +496,5 @@
 		}
 		
 	})
-	/* 禁止回车提交表单 */
-	$("input").each(
-			function(){
-				$(this).keypress( function(e) {
-					var key = window.event ? e.keyCode : e.which;
-					if(key.toString() == "13"){
-						return false;
-					}
-				});
-	});
-}();
+	
+})();

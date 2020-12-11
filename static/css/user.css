@@ -1,0 +1,94 @@
+.people{
+	
+	width: 1000px;
+	margin: 0 auto;
+}
+.people-header{
+	position: relative;
+	background-color: #4682BE;
+}
+.people-content{
+	position: relative;
+	margin-top: 10px;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	height: 2000px;
+}
+.user-dynamic{
+	width: 704px;
+	background-color: #FFFFFF;
+	height: 100%;
+	-webkit-box-shadow: 0 1px 3px rgba(18,18,18,.1);
+	box-shadow: 0 1px 3px rgba(18,18,18,.1);
+}
+.people-info{
+	width: 286px;
+	
+	
+}
+.people-dynamic,.user-followds-header{
+	-webkit-box-shadow: 0 1px 3px rgba(18,18,18,.1);
+	box-shadow: 0 1px 3px rgba(18,18,18,.1);
+}
+.people-dynamic{
+	margin-top: 10px;
+	padding:0 10px;
+	border: 1px solid #EBEBEB;
+}
+
+.user-followds-header{
+	background-color: #FFFFFF;
+	border-bottom: 1px solid #EBEBEB;
+}
+.lightItem{
+	cursor: pointer;
+	height: 46px;
+	align-items: center;
+	justify-content: space-between;
+}
+.lightItem:hover{
+	color: pink;
+}
+.lightItem,.folowds-number{
+	display: flex;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+}
+.folowds-number .button-item-number{
+	flex: 1 1;
+	-webkit-box-flex: 1;
+}
+.folowds-number .button-item-number:last-child{
+	border-left: 1px solid #EBEBEB;
+}
+.followd-list-item{
+	position: relative;
+	padding: 10px;
+	border-bottom: 1px dashed pink;
+}
+.followd-list-item:last-child{
+	border-bottom: 0;
+}
+.content-item .content-item-main{
+	margin: 0;
+}
+.content-item-main .people-pic{
+	margin-left:0 ;
+}
+.content-main-head{
+	text-align: center;
+	display: flex;
+	align-items: center;
+}
+.content-main-head a{
+	font-size: 18px;
+	text-align: center;
+}
+.followdPages{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

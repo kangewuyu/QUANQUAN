@@ -45,6 +45,12 @@ body{
 	font-size: 16px;
 	color: #121212;
 }
+input[type="file"]{
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
+}
 .holder{
 	visibility: hidden;
 }
@@ -259,7 +265,7 @@ body{
 .Button-login{
 	border-color: pink;
 	color: pink;
-	margin-right: 15px;
+	margin-right:15px;
 }
 .Button-login:hover{
 	border-color:#FFF5FB;
@@ -628,12 +634,7 @@ body{
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 }
-.file input[type="file"]{
-	width: 100%;
-	height: 100%;
-	opacity: 0;
-	cursor: pointer;
-}
+
 .dynamic-footer{
 	display: -webkit-box;
 	display: flex;

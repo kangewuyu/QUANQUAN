@@ -182,68 +182,7 @@
 		}) */
 		return ul;
 	}
-	/* 分页 */
-	$.fenye=function (div,text) {
-		let pageNum=Number(text.pageNum);
-		let pages=Number(text.pages);
-		if (pageNum!=1) {
-			let button_prev=$.button_add().addClass("Button button-page button-plan button-prev").text("上一页");
-			div.append(button_prev);
-		}
-		if(pages<=5){
-			for (let i = 1; i<=pages; i++) {
-				let button=$.button_add().addClass("Button button-page button-plan").text(i);
-				if (pageNum==i) {
-					button.attr('disabled',true);
-				}
-				div.append(button);
-			}
-		}else if (pageNum<4) {
-			for (let i = 1; i <= 4; i++) {
-				let button=$.button_add().addClass("Button button-page button-plan").text(i);
-				if (pageNum==i) {
-					button.attr('disabled',true);
-				}
-				div.append(button);
-			}
-			let button_el=$.button_add().addClass("Button button-page button-el").text("...");
-			button_el.attr("disabled",true);
-			let button_pages=$.button_add().addClass("Button button-page button-plan").text(pages);
-			div.append(button_el,button_pages);
-		} else if((pageNum+2)>=pages){
-			let button=$.button_add().addClass("Button button-page button-plan").text(1);
-			let button_el=$.button_add().addClass("Button button-page button-el").text("...");
-			button_el.attr("disabled",true);
-			div.append(button,button_el);
-			for(let i=pages-3;i<=pages;i++){
-				let button=$.button_add().addClass("Button button-page button-plan").text(i);
-				if (pageNum==i) {
-					button.attr('disabled',true);
-				}
-				div.append(button);
-			}
-		}else{
-			let button=$.button_add().addClass("Button button-page button-plan").text(1);
-			let button_el=$.button_add().addClass("Button button-page button-el").text("...");
-			button_el.attr("disabled",true);
-			div.append(button,button_el);
-			for(let i=pageNum-1;i<=pageNum+1;i++){
-				let button=$.button_add().addClass("Button button-page button-plan").text(i);
-				if (pageNum==i) {
-					button.attr('disabled',true);
-				}
-				div.append(button);
-			}
-			let button_el_2=$.button_add().addClass("Button button-page button-el").text("...");
-			button_el_2.attr("disabled",true);
-			let button_pages=$.button_add().addClass("Button button-page button-plan").text(pages);
-			div.append(button_el_2,button_pages);
-		}
-		if(pageNum !=pages){
-			let button_prev=$.button_add().addClass("Button button-page button-plan button-next").text("下一页");
-			div.append(button_prev);
-		}
-	}
+	
 	/* 显示评论 */
 	$.comment_ul=function (that,dynamic,z) {
 		
@@ -306,25 +245,7 @@
 		
 	}
 	
-	// 定位div(contenteditable = "true")；超过字数光标定位到末端
-	function set_focus(e) {
-		//console.log(e)
-		e.focus();
-		if ($.support.msie) {
-		    let range = document.selection.createRange();
-		    this.last = range;
-		    range.moveToElementText(e[0]);
-		    range.select();
-		    document.selection.empty(); // 取消选中
-		} else {
-		    let range = document.createRange();
-		    range.selectNodeContents(e[0]);
-		    range.collapse(false);
-		    let sel = window.getSelection();
-		    sel.removeAllRanges();
-		    sel.addRange(range);
-		}
-	}
+	
 	/* 发布评论框 */
 	$.input_comment = function (that,text,dynamic/* ,touser */) {
 		let div = $("<div class='input-comment'>");
@@ -355,9 +276,10 @@
 				$(this).children("span").show(500);
 			} 
 		})
+		
 		/* 动态字数限制和相应的设置 */
 		let lock=true;
-		let fullContent="";
+		
 		/* 解决中文输入法的问题 */
 		input.on('compositionstart', function () {
 		    event.stopPropagation();
@@ -368,7 +290,7 @@
 		    event.stopPropagation();
 		    event.preventDefault();
 			lock = true;
-		    addInput(event, $(this));
+		    addInput(event, $(this),lock);
 		});
 		input.on('keyup input propertychange', function (event) {
 		    event.stopPropagation();
@@ -409,39 +331,7 @@
 		        document.execCommand('paste', false, text);
 		    }
 		});
-		// 字数限制
-		function addInput(event, then) {
-		    let _words = then.text();
-		    let _this = then;
-		    if (lock) {
-		        let num = _words.length;
-		 
-		        if (num >= 100) {
-		            num = 100;
-		            if (event.target.style.borderColor == ('red' || 'rgb(205, 205, 205)')) {
-		                event.target.innerText = fullContent;
-		            } else {
-		                event.target.innerText = _words.substring(0, 100);
-		                //_this.css('border-color', 'red');
-		                then.prev().css('color', 'red');
-		                fullContent = _words.substring(0, 100);
-		            }
-		            set_focus(then);
-		        } else {
-		            //_this.css('border-color', '#CDCDCD');
-		            then.prev().css('color', '#CDCDCD');
-		            fullContent = ''
-		        }
-		        then.prev().children("span").text(num);
-		    } else if (fullContent) {
-		        // 目标对象：超过100字时候的中文输入法
-		        // 原由：虽然不会输入成功，但是输入过程中字母依然会显现在输入框内
-		        // 弊端：谷歌浏览器输入法的界面偶尔会闪现
-		        event.target.innerText = fullContent;
-		        lock = true;
-		        set_focus(then);
-		    }
-		}
+		
 		 
 		
 		/* 提交评论到后台 */
@@ -455,8 +345,8 @@
 			let fd = new Object();
 			fd.message=input.html();
 			fd["dynamicId"]=dynamic.dynamicId;
-			fd.userName=sessionStorage.username;
-			fd["userId"]=sessionStorage.userId;
+			fd.userName=sessionStorage.getItem("username");
+			fd["userId"]=sessionStorage.getItem("userId");
 			/* if(typeof touser !=="undefined"){
 				fd["toUserId"]=touser.authorId;
 				fd.toUserName=touser.authorName;
@@ -747,7 +637,6 @@
 				let header_usertitle=$("<div class='hovercard-titleText'>");
 				/* 用户名称 */
 				let header_usertext=$("<div class='titleText-title'></div>");
-				
 				let span_user=$("<span></span>");
 				let user_a=$("<a href='/QUANQUAN/view/people/user.homepage.html' target='_blank'></a>").text(user.username);
 				span_user.append(user_a);
@@ -780,7 +669,7 @@
 				div_letter.append(letter,"发私信");
 				div_footer_button.append(div_add,div_letter);
 				div_main.append(div_border);
-				if (sessionStorage.userId!=user.userId) {
+				if (sessionStorage.getItem("userId")!=user.userId) {
 					div_main.append(div_footer_button);
 				} 
 				user_div.append(div_header,div_main);
@@ -804,6 +693,7 @@
 				div_add.click(function (event) {
 					event.stopPropagation();//阻止事件遍历到该节点上
 					event.preventDefault();//阻止默认事件
+					let number=Number(follows.find("strong").text());
 					if($(this).text()!=="加关注"){
 						$.ajax({
 							url:"http://8.129.177.19:8085/withfriend/remconcern",
@@ -815,6 +705,8 @@
 							timeout:10000,//超时时间设置为10秒；
 							success:function(data){
 								console.log(data);
+								number--;
+								follows.find("strong").text(number);
 								div_add.empty();
 								let span=$("<span class='iconfont icon-add-select'></span>");
 								div_add.removeClass("button--grey");
@@ -837,6 +729,8 @@
 						timeout:10000,//超时时间设置为10秒；
 						success:function(data){
 							//console.log(data);
+							number++;
+							follows.find("strong").text(number);
 							div_add.empty();
 							div_add.removeClass("button--pink");
 							div_add.addClass("button--grey");
@@ -979,18 +873,12 @@
 	$.dynamic_list=function(data){
 		//console.log(data);
 		for (let dynamic of data) {
-			
 			content.children()
 				.eq(content.children()
 				.length-1).before(
 					$.card_dynamic(dynamic,1));
-			
 		}
-		
-		
-		
 	}
-	
 	
 	/* 从后台查询推荐动态 */
 	function load(page){
@@ -1097,14 +985,16 @@
 				}
 			})
 	}
-	/* 无关注 */
+	/* 无关注内容 */
 	$.follow_not=function () {
+		let div_notFollow=$("<div class='notFollow'></div>");
+		let span_not=$("<span class='iconfont icon-kong icon-h6'></span>");
+		let div_text=$("<div class='notFollow-text'>还没有关注的人</div>");
+		div_notFollow.append(span_not,div_text);
+		content.children(content.children().length-1)
+			.before(div_notFollow);
 		
 	}
-	/* 未登录 */
-	$.notLogin=function () {
-		
-	};
 	$.follow=function (page) {
 		$.ajax({
 			url:"http://8.129.177.19:8085/withfriend/condynamic/"+page,
@@ -1126,8 +1016,8 @@
 					
 					//hearder_info(true);
 				}else{
-					$.notLogin();
 					console.log(data);
+					$.loginDIV();
 				}
 			},
 			error:function(data){
@@ -1140,8 +1030,8 @@
 	/* 触底加载 */
 	$(window).mousewheel(function(){
 		if ($(document).height()-$(this).scrollTop()-$(this).height()<1) {
-			let page = sessionStorage.page
-			let pages = sessionStorage.pages
+			let page = sessionStorage.getItem("page")
+			let pages = sessionStorage.getItem("pages")
 			if (!dynamic_load&&page!=pages) {
 				dynamic_load = true;
 				let t=$(".dynamic-links-a.is-active").text()

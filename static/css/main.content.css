@@ -3,9 +3,11 @@
 	transition: all .3s ease-in-out;
 }
 .main-content{
-	display: -webkit-box;
 	display: flex;
+	display: -ms-flexbox;
+	display: -webkit-box;
 	-webkit-box-align:start;
+	-ms-flex-align: start;
 	align-items: flex-start;
 	padding: 0 16px;
 	width: 1000px;
@@ -61,19 +63,22 @@
 	overflow: initial;
 	transition: height .5s ease-in-out;
 }
-.dynamic-user{
+.dynamic-user,.content-item-main{
 	margin-bottom: 10px;
 	position: relative;
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
 	justify-content: flex-start;
 }
-.author-pic{
+.author-pic,.people-pic{
 	width: 46px;
 	height: 46px;
 	margin-right: 10px;
 	border-radius: 50%;
 }
-.author-img{
+
+.author-img,.people-img{
 	width: 100%;
 	height: 100%;
 	border-radius: 50%;
@@ -124,6 +129,8 @@
 	color: #DB7093;
 }
 .comments-time{
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
 }
 .comments-time .time{
@@ -145,8 +152,11 @@
 .message-image{
 	
 	margin: 6px 0;
+	display: -ms-flexbox;
 	display: -webkit-box;
 	display: flex;
+	-webkit-box-align: start;
+	-ms-flex-align: start;
 	align-items: flex-start;
 	flex-wrap: wrap;
 }
@@ -167,7 +177,11 @@
 }
 .contentItem{
 	position: relative;
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
+	-webkit-box-align:center;
+	-ms-flex-align:center;
 	align-items: center;
 	text-align: center;
 	justify-content: flex-start;
@@ -217,8 +231,12 @@
 }
 .comments-topbar{
 	height: 40px;
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
 	justify-content: flex-start;
+	-webkit-box-align:center;
+	-ms-flex-align:center;
 	align-items: center;
 	color: black;
 	border-bottom: 1px solid pink;
@@ -241,6 +259,8 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: block;
 	margin: 0 20px;
 	border-bottom:1px dashed pink;
@@ -252,6 +272,8 @@
 .commetsItem-user{
 	position: relative;
 	margin-right: 10px;
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
 	justify-content: flex-start;
 }
@@ -261,6 +283,8 @@
 /* 评论页数显示 */
 .commentPages{
 	padding: 16px 20px;
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
 	justify-content: center;
 	border-top: 1px dashed pink;
@@ -316,7 +340,11 @@
 	position: relative;
 }
 .form-item{
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
+	-webkit-box-align:center;
+	-ms-flex-align:center;
 	align-items: center;
 }
 .comment-label{
@@ -380,6 +408,8 @@
 	border-right: 8px solid transparent
 }
 .delete div{
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
 	justify-content: center;
 }
@@ -414,6 +444,8 @@
 	box-shadow:0 5px 20px rgba(18,18,18,.1);
 	background:#fff;
 	border-radius:2px;
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
 	justify-content: flex-start;
 }
@@ -438,18 +470,29 @@
 }
 .hovercard-item{
 	margin-left: 20px;
-	padding: 10px 0;
 }
 .hoverNumber{
 	margin-bottom: 10px;
 	display: flex;
-	justify-content:space-around;
+}
+.hoverNumber .button-item-number{
+	-webkit-flex: 1 1;
+	flex: 1 1;
+}
+.number-itemInner{
+	text-align: center;
+	padding: 10px 0;
+}
+.number-itemName{
+	font-size: 14px;
 }
 .number-itemValue{
 	font-size: 18px;
 	font-weight: 800;
 }
 .hovercard-button{
+	display: -ms-flexbox;
+	display: -webkit-box;
 	display: flex;
 	justify-content: space-around;
 	align-content: space-between;
@@ -478,4 +521,22 @@
 	width: 100%;
 	height: 100%;
 	overflow-y: auto;
+}
+/* 无内容的展示 */
+.notFollow{
+	display: -ms-flexbox;
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-align:center;
+	-ms-flex-align:center;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.icon-h6{
+	font-size: 200px;
+	color: #CCCCCC;
+}
+.notFollow-text{
+	margin: 10px 0;
 }
