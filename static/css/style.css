@@ -3,6 +3,9 @@
     padding: 0;
 }
 
+input {
+    outline: none;
+}
 /*登录页面*/
 .login_bg {
     background: url("/QUANQUAN/static/img/loginBg.jpg") 0 0 repeat-x;
@@ -48,16 +51,13 @@ textarea:-moz-placeholder {
     font-style: italic;
 }
 
-input {
-    outline: none;
-}
 
 .loginForm {
     background: url("/QUANQUAN/static/img/formBg.png") 0 0 no-repeat;
     width: 320px;
-    height: 140px;
+    height: 210px;
     border-radius: 8px;
-    padding: 90px 38px 48px 30px;
+    padding: 70px 38px 0 30px;
     /*border: 1px solid green;*/
 }
 
@@ -85,7 +85,6 @@ input {
     box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6) inset;
 
 }
-
 /*输入框得到焦点的效果*/
 .inputbox input:active, .providerAdd input:focus,
 .inputbox input:focus {
@@ -132,15 +131,21 @@ input[type='submit']:hover, input[type='reset']:hover {
     background: rgb(74, 179, 198);
 }
 
-input[type='submit']:active, input[type='submit']:focus,
-input[type='reset']:active, input[type='reset']:focus, .providerView a:hover, .providerView a:active {
+input[type='submit']:active, 
+input[type='reset']:active,  .providerView a:hover, .providerView a:active {
     background: #2a5989;
     border: 1px solid rgb(12, 76, 87);
     -webkit-box-shadow: 0px 1px 6px 4px rgba(0, 0, 0, 0.2) inset;
     -moz-box-shadow: 0px 1px 6px 4px rgba(0, 0, 0, 0.2) inset;
     box-shadow: 0px 1px 6px 4px rgba(0, 0, 0, 0.2) inset;
 }
-
+/* 错误提示信息 */
+.login-error{
+	display: flex;
+	justify-content: center;
+	color: red;
+	margin-bottom: 10px;
+}
 /*欢迎登录页*/
 .wColck {
     width: 88px;

@@ -1,40 +1,5 @@
 (function(){
-	$.ajaxSetup({
-		contentType:'application/json',
-	})
-	// 该事件是核心
-	let count=0;
-	window.addEventListener('storage', function(event) {
-		
-		if (event.key == 'getSessionStorage') {
-			count++;
-			// 已存在的标签页会收到这个事件
-			localStorage.setItem('sessionStorage', JSON.stringify(sessionStorage));
-			localStorage.removeItem('sessionStorage');
-	
-		} else if (event.key == 'sessionStorage' && !sessionStorage.length) {
-			count--;
-			// 新开启的标签页会收到这个事件
-			var data = JSON.parse(event.newValue),
-					value;
-					//console.log(key)
-					console.log(data)
-			for (key in data) {
-				sessionStorage.setItem(key, data[key]);
-			}
-			
-		}else if (event.key =='setItem'&&event.newValue!=null) {
-			/* 实现登录后所有页面共享token */
-			sessionStorage.setItem("token",event.newValue);
-			localStorage.removeItem('setItem');
-			location=window.location;
-		}else if (event.key=='removeItem'&&event.newValue!=null) {
-			/* 实现退出登录后所有页面移除token */
-			sessionStorage.removeItem("token");
-			localStorage.removeItem('removeItem');
-			location=window.location;
-		}
-	});
+
 	new Promise(function(resolve,reject){
 		//console.log(2)
 			// 这个调用能触发目标事件，从而达到共享数据的目的
@@ -51,7 +16,7 @@
 					},
 				});
 				//console.log(sessionStorage.token)
-			},100);
+			},0);
 		}).catch(function(){
 			console.log(4)
 		})
@@ -66,7 +31,7 @@
 			url:"http://8.129.177.19:8085/user/selfuser",
 			dataType:'json',//服务器返回json格式数据
 			type:'get',//HTTP请求类型
-			timeout:10000,//超时时间设置为10秒；
+			timeout:5000,//超时时间设置为10秒；
 			async:false,
 			success:function(data){
 				if(data.code=="200"){
@@ -91,12 +56,16 @@
 	}
 	/* 判断是否登录 */
 	setTimeout(function () {
+		var pattern='index.html';
+		let path=location.pathname;
 		if ($.if_login()) {
 			hearder_info(true)
-		} else{
+		} else if(location.pathname.match(pattern)){
+			location.pathname="/QUANQUAN/view/login.html";
+		}else{
 			hearder_info(false);
 		}
-	},150)
+	},8)
 	/* 登录 */
 	function login(){
 		$.ajax({
@@ -111,7 +80,7 @@
 					sessionStorage.setItem("token",data.msg);
 					localStorage.setItem("setItem",data.msg);
 					$(".popup p.login-tips").text("");
-					location = window.location;
+					window.location.reload();
 					
 				} else if(data.code=='400'){
 					$(".popup p.login-tips").text("用户名或密码错误");
@@ -174,15 +143,6 @@
 		});
 		div_div.ready(function() {
 			/* 禁止回车提交表单 */
-			$("#login input").each(
-					function(){
-						$(this).keypress( function(e) {
-							var key = window.event ? e.keyCode : e.which;
-							if(key.toString() == "13"){
-								return false;
-							}
-						});
-			});
 			$("input").blur(function(){
 				blurInputLoginBox($(this));
 			})
@@ -268,12 +228,12 @@
 	
 	function hearder_info(e){
 		
-		let hearder_info = $(".baseHeader .hearder-info");
-		hearder_info.empty();
+		let hearder = $(".baseHeader .hearder-info");
+		hearder.empty();
 		/* 已经登录后的头部修改 */
 		if(e){
 			let div_user=$(`<div class='user-img'><button id='Image' class='Button button-pics'><img class='user-pic' srcset='`+sessionStorage.getItem("pic")+`'/></button></div>`);
-			hearder_info.append(div_user);
+			hearder.append(div_user);
 			/* 个人信息 */
 			div_user.ready(function(){
 				var detailes = $("#detailes");
@@ -306,7 +266,7 @@
 								error:function(){
 									sessionStorage.removeItem("token");
 									localStorage.setItem("removeItem",Date.now());
-									location = window.location;
+									window.location.reload();
 								}
 							})
 							
@@ -322,7 +282,7 @@
 			let login = $("<button type='button' class='Button Button-login'>登录</button>");
 			let register = $("<button type='button' class='Button button--pink'>注册圈圈</button>");
 			div.append(login,register);
-			hearder_info.append(div);
+			hearder.append(div);
 			div.ready(function(){
 				$(".info-button .Button").click(function() {
 					$.loginDIV();
@@ -517,5 +477,30 @@
 		} else{
 			$.loginDIV();
 		}
+	})
+	/* 页面滚动事件 */
+	$(window).scroll(function(){
+		let scrollTop=$(document).scrollTop()||$(window).scrollTop();  
+		let header = $("header");
+		if(scrollTop*1>0){
+			
+			header.addClass("is-fixed").css({"width":"100%","top":"0"});
+			if(header.next()===null||typeof header.next()=='undefined'||header.next().length===0){
+				header.parent().append(
+					$("<div class='holder' style='position: relative;inset: 0px; display: block; float: none; margin: 0px; height: 60px;'></div>"));
+			}
+		}else{
+			header.parent().children().eq(1).remove();
+		   	header.removeClass("is-fixed").css({"width":"","top":""});
+		}
+		if (scrollTop*1>$(window).height()/2) {
+			$("#base .backtop").addClass("backtop--hiden");
+		} else{
+			$("#base .backtop").removeClass("backtop--hiden");
+		}
+	})
+	/* 页面回滚 */
+	$("#base .backtop").click(function () {
+		$("html,body").animate({scrollTop: 0}, 1000);
 	})
 })();

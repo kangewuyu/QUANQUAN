@@ -15,7 +15,7 @@
 	} else{
 		
 	}
-	 console.log(userId)
+	 //console.log(userId)
 	//search_page(1);
 	//console.log(user);
 	//$.fenye($(".followdPages"),t);

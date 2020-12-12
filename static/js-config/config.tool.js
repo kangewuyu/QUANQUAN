@@ -1,14 +1,58 @@
 (function () {
+	$.ajaxSetup({
+		contentType:'application/json',
+	})
+	
+	/* 判断当前location 是否为顶层 来禁止frame引用 */
+	if(top.location!=self.location){
+	     top.location=self.location;
+	}
+	// 该事件是核心
+	
+	window.addEventListener('storage', function(event) {
+		if (event.key == 'getSessionStorage') {
 
+			// 已存在的标签页会收到这个事件
+			localStorage.setItem('sessionStorage', JSON.stringify(sessionStorage));
+			localStorage.removeItem('sessionStorage');
+	
+		} else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+			// 新开启的标签页会收到这个事件
+			var data = JSON.parse(event.newValue),
+					value;
+					//console.log(key)
+			for (key in data) {
+				sessionStorage.setItem(key, data[key]);
+			}
+			
+		}else if (event.key =='setItem') {
+			/* 实现登录后所有页面共享token */
+			if (event.newValue!=null) {
+				sessionStorage.setItem("token",event.newValue);
+			}
+			if (!location.href.match("login.html")) {
+				window.location.reload();
+			}
+			
+			localStorage.removeItem('setItem');
+			
+		}else if (event.key=='removeItem') {
+			/* 实现退出登录后所有页面移除token */
+			sessionStorage.removeItem("token");
+			window.location.reload();	
+			localStorage.removeItem('removeItem');
+			
+		}
+	});
 	/* 禁止回车提交表单 */
 	$("input").each(
-			function(){
-				$(this).keypress( function(e) {
-					var key = window.event ? e.keyCode : e.which;
-					if(key.toString() == "13"){
-						return false;
-					}
-				});
+		function(){
+			$(this).keypress( function(e) {
+				var key = window.event ? e.keyCode : e.which;
+				if(key.toString() == "13"){
+					return false;
+				}
+			});
 	});
 	/* 转化为json格式 */
 	$.fn.serializeJson =  function(filter){
@@ -30,31 +74,8 @@
 		});
 		return serializeObj;
 	};
-	/* 页面滚动事件 */
-	$(window).scroll(function(){
-		let scrollTop=$(document).scrollTop()||$(window).scrollTop();  
-		let header = $("header");
-		if(scrollTop*1>0){
-			
-			header.addClass("is-fixed").css({"width":"100%","top":"0"});
-			if(header.next()===null||typeof header.next()=='undefined'||header.next().length===0){
-				header.parent().append(
-					$("<div class='holder' style='position: relative;inset: 0px; display: block; float: none; margin: 0px; height: 60px;'></div>"));
-			}
-		}else{
-			header.parent().children().eq(1).remove();
-		   	header.removeClass("is-fixed").css({"width":"","top":""});
-		}
-		if (scrollTop*1>$(window).height()/2) {
-			$("#base .backtop").addClass("backtop--hiden");
-		} else{
-			$("#base .backtop").removeClass("backtop--hiden");
-		}
-	})
-	/* 页面回滚 */
-	$("#base .backtop").click(function () {
-		$("html,body").animate({scrollTop: 0}, 1000);
-	})
+	
+	
 	
 	/* 分页 */
 	$.fenye=function (div,text) {

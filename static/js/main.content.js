@@ -243,7 +243,25 @@
 		}
 		
 	}
-	
+	// 定位div(contenteditable = "true")；超过字数光标定位到末端
+	function set_focus(e) {
+		//console.log(e)
+		e.focus();
+		if ($.support.msie) {
+		    let range = document.selection.createRange();
+		    this.last = range;
+		    range.moveToElementText(e[0]);
+		    range.select();
+		    document.selection.empty(); // 取消选中
+		} else {
+		    let range = document.createRange();
+		    range.selectNodeContents(e[0]);
+		    range.collapse(false);
+		    let sel = window.getSelection();
+		    sel.removeAllRanges();
+		    sel.addRange(range);
+		}
+	}
 	
 	/* 发布评论框 */
 	$.input_comment = function (that,text,dynamic/* ,touser */) {
@@ -331,25 +349,7 @@
 		        document.execCommand('paste', false, text);
 		    }
 		});
-		// 定位div(contenteditable = "true")；超过字数光标定位到末端
-		function set_focus(e) {
-			//console.log(e)
-			e.focus();
-			if ($.support.msie) {
-			    let range = document.selection.createRange();
-			    this.last = range;
-			    range.moveToElementText(e[0]);
-			    range.select();
-			    document.selection.empty(); // 取消选中
-			} else {
-			    let range = document.createRange();
-			    range.selectNodeContents(e[0]);
-			    range.collapse(false);
-			    let sel = window.getSelection();
-			    sel.removeAllRanges();
-			    sel.addRange(range);
-			}
-		}
+		
 		
 		let fullContent="";
 		// 字数限制
@@ -1064,7 +1064,7 @@
 	}
 	/* 触底加载 */
 	$(window).mousewheel(function(){
-		if ($(document).height()-$(this).scrollTop()-$(this).height()<1) {
+		if ($(document).height()-$(this).scrollTop()-$(this).height()<500) {
 			let page = sessionStorage.getItem("page")
 			let pages = sessionStorage.getItem("pages")
 			if (!dynamic_load&&page!=pages) {

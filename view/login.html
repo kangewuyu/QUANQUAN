@@ -3,35 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>登录-QUANQUAN</title>
+	<link rel="shortcut icon" type="image/x-icon" href="/QUANQUAN/static/img/favicon.ico"/>
     <link type="text/css" rel="stylesheet" href="/QUANQUAN/static/css/style.css" />
-    <script type="text/javascript">
-        /* if(top.location!=self.location){
-              top.location=self.location;
-         } */
-    </script>
+	<script type="text/javascript" src="/QUANQUAN/static/js-config/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="/QUANQUAN/static/js-config/jquery-ui.min.js"></script>
+	<script src="/QUANQUAN/static/js-config/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
+
 </head>
 <body class="login_bg">
 <section class="loginBox">
-    <header class="loginHeader">
-        <h1>圈圈登陆</h1>
-    </header>
-    <section class="loginCont">
-        <form class="loginForm" action="/login.do"  name="actionForm" id="actionForm"  method="post" >
-            <div class="inputbox">
-                <label>学号：</label>
-                <input type="text" class="input-text" id="userCode" name="xh" placeholder="请输入用户名" required/>
-            </div>
-            <div class="inputbox">
-                <label>密码：</label>
-                <input type="password" id="userPassword" name="passwd" placeholder="请输入密码" required/>
-            </div>
-            <div class="subBtn">
-
-                <input type="submit" value="登录"/>
-                <input type="reset" value="重置"/>
-            </div>
-        </form>
-    </section>
+	<header class="loginHeader">
+		<h1>圈圈登陆</h1>
+	</header>
+	<section class="loginCont">
+		<form class="loginForm" name="actionForm" id="actionForm" autocomplete="off">
+			<div class="login-error"><span class="error-text"></span></div>
+			<div class="inputbox">
+				<label>学号：</label>
+				<input type="text" class="input-text" id="userCode" name="xh" placeholder="请输入用户名" required/>
+			</div>
+			<div class="inputbox">
+				<label>密码：</label>
+				<input type="password" id="userPassword" name="passwd" placeholder="请输入密码" required/>
+			</div>
+			<div class="subBtn">
+				<input id="login" type="submit" value="登录"/>
+				<input type="reset" value="重置"/>
+			</div>
+		</form>
+	</section>
 </section>
 </body>
+<script src="/QUANQUAN/static/js-config/config.tool.js" type="text/javascript"></script>
+<script src="/QUANQUAN/static/js/style.js" type="text/javascript" charset="utf-8"></script>
 </html>

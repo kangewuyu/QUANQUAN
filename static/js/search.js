@@ -12,6 +12,7 @@
 			type:'get',//HTTP请求类型
 			timeout:10000,//超时时间设置为10秒；
 			success:function(data){
+				console.log(data)
 				if(data.code=="200"){
 					sessionStorage.setItem("page",data.data.pageNum);
 					sessionStorage.setItem("pages",data.data.pages);
@@ -28,24 +29,20 @@
 	let search = $("input[name='search']");
 	search.val(sessionStorage.search);
 	//console.log(search.val());
-	if(sessionStorage.search.length!==0){
-		$.search_dynamic(sessionStorage.search,1)
-	}
+	setTimeout(function () {
+		if(sessionStorage.search.length!==0){
+			$.search_dynamic(sessionStorage.search,1)
+		}
+	},10)
+	
 	
 	/* 触底加载 */
 	$(window).mousewheel(function(){
-		if ($(document).height()-$(this).scrollTop()-$(this).height()<1) {
+		if ($(document).height()-$(this).scrollTop()-$(this).height()<500) {
 			let page = sessionStorage.page
 			let pages = sessionStorage.pages
 			if (!dynamic_load&&page!=pages) {
 				dynamic_load = true;
-				let t=$(".dynamic-links-a.is-active").text()
-				if(t==="推荐"){
-					load(page+1);
-				}
-				if(t==="关注"){
-					$.follow(page+1);
-				}
 				if (sessionStorage.search.length!=0) {
 					$.search_dynamic(page+1);
 				} 
