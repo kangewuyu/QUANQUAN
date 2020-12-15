@@ -4,7 +4,7 @@
 	}); */
 	//location.search=sessionStorage.search;
 	
-	
+	let dynamic_load=false;
 	$.search_dynamic=function (val,page) {
 		$.ajax({
 			url:"http://8.129.177.19:8085/search/dynamic/"+val+"/"+page,

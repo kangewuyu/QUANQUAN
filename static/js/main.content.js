@@ -455,6 +455,7 @@
 		})
 		return div;
 	}
+	/* z参数表示是否显示具体评论 1否，2是 */
 	$.card_dynamic=function (dynamic,z) {
 		let cord = $("<div class='card item-dynamic recommend'>");
 		cord.attr("data-content",
@@ -651,6 +652,7 @@
 				let div_item=$("<div class='dynamic-model'>");
 				let div_model_inner=$("<div class='dynamci-model-inner'>");
 				let em_close=$("<em class='iconfont icon-close'>");
+				
 				div_model_inner.append($.card_dynamic(t,2))
 				div_item.append(div_model_inner,em_close);
 				div_dynamic.append(div_item);
@@ -926,9 +928,10 @@
 	}
 	/* 限制动态加载 */
 	let dynamic_load = false;
-	let content = $("div.dynamic-list div.content");
+	
 	
 	$.dynamic_list=function(data){
+		let content= $("div.dynamic-list div.content");
 		//console.log(data);
 		for (let dynamic of data) {
 			content.children()
@@ -993,7 +996,7 @@
 			$.follow(1);
 		}
 	})
-	/* 热点动态 */
+	/* 热点动态的显示 */
 	$.hotspot = function(){
 			$.ajax({
 				url:"http://8.129.177.19:8085/withfriend/dynamic",
@@ -1022,6 +1025,7 @@
 	}
 	/* 无关注内容 */
 	$.follow_not=function () {
+		let content= $("div.dynamic-list div.content");
 		let div_notFollow=$("<div class='notFollow'></div>");
 		let span_not=$("<span class='iconfont icon-kong icon-h6'></span>");
 		let div_text=$("<div class='notFollow-text'>还没有关注的人</div>");

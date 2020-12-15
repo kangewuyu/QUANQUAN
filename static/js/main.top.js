@@ -34,6 +34,7 @@
 			timeout:5000,//超时时间设置为10秒；
 			async:false,
 			success:function(data){
+				//console.log(data)
 				if(data.code=="200"){
 					sessionStorage.setItem("userId",data.data.userId);
 					sessionStorage.setItem("username",data.data.username);
